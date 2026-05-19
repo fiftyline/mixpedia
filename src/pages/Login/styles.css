@@ -1,0 +1,232 @@
+.login-root {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── 왼쪽 다크 패널 ── */
+.login-panel {
+  flex: 1;
+  background: #111827;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 52px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(165, 180, 252, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(165, 180, 252, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.login-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-brand-logo img {
+  width: 32px;
+  height: 32px;
+}
+
+.login-brand-name {
+  font-family: var(--font-headline);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #e5e7f0;
+}
+
+.login-panel-tagline {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-panel-headline {
+  font-family: var(--font-headline);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #f9fafb;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.login-panel-headline em {
+  font-style: normal;
+  color: #a5b4fc;
+}
+
+.login-panel-for {
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e5e7f0;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.login-panel-desc {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.7;
+  max-width: 340px;
+  margin-top: 4px;
+}
+
+.login-panel-footer {
+  position: relative;
+}
+
+.login-dmc-logo {
+  height: 28px;
+  width: auto;
+  opacity: 0.35;
+}
+
+.login-panel-team {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #9ca3bf;
+  letter-spacing: 0.05em;
+}
+
+/* ── 오른쪽 폼 영역 ── */
+.login-form-area {
+  width: 500px;
+  flex-shrink: 0;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+  border-left: 1px solid var(--border);
+}
+
+.login-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-title {
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.login-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.825rem;
+  color: var(--text-tertiary);
+}
+
+.login-dmc-logo--dark {
+  height: 16px;
+  width: auto;
+  filter: invert(1) brightness(0.4);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.login-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.login-input {
+  height: 40px;
+  padding: 0 12px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  outline: none;
+  width: 100%;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.login-input::placeholder {
+  color: var(--text-tertiary);
+  font-size: 0.825rem;
+}
+
+.login-input:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.login-error {
+  font-size: 0.8rem;
+  color: var(--error-text);
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  padding: 9px 12px;
+}
+
+.login-btn {
+  height: 42px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.15s;
+  margin-top: 4px;
+}
+
+.login-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.login-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

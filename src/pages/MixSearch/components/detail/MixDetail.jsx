@@ -1,0 +1,288 @@
+import { useReducer, useEffect, useMemo, useState } from "react";
+import {
+  ChevronLeft,
+  ExternalLink,
+  Pencil,
+  Bookmark,
+  BookmarkCheck,
+  Loader,
+} from "lucide-react";
+import axios from "axios";
+import { endpoint } from "../../../../config/config";
+import { useBookmark } from "../../../../context/BookmarkContext";
+import { toArr, fmtBudget, GENDER_LABEL } from "../../utils/mixUtils";
+import DonutChart from "./DonutChart";
+import EditModal from "./EditModal";
+import MixMicroGrid from "./MixMicroGrid";
+
+function pdfLabel(url) {
+  try {
+    return decodeURIComponent(url.split("/").pop());
+  } catch {
+    return "파일 보기";
+  }
+}
+
+function microReducer(state, action) {
+  switch (action.type) {
+    case "start":
+      return { data: null, loading: true, error: null };
+    case "success":
+      return { data: action.payload, loading: false, error: null };
+    case "error":
+      return { data: null, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+}
+
+export default function MixDetail({ mix, onBack, onSelect }) {
+  const { bookmarkedIds, pendingIds, toggleBookmark } = useBookmark();
+  const bmId = Number(mix.file_id);
+  const isBookmarked = bookmarkedIds.has(bmId);
+  const isPending = pendingIds.has(bmId);
+
+  const [
+    { data: microData, loading: microLoading, error: microError },
+    dispatch,
+  ] = useReducer(microReducer, { data: null, loading: false, error: null });
+
+  const [editOpen, setEditOpen] = useState(false);
+
+  useEffect(() => {
+    if (!mix.file_id) return;
+    dispatch({ type: "start" });
+    axios
+      .post(`${endpoint}/search_micro/`, { file_id: mix.file_id })
+      .then((res) => dispatch({ type: "success", payload: res.data }))
+      .catch((err) => {
+        console.error("[search_micro] 오류", err);
+        dispatch({ type: "error", payload: "데이터를 불러오지 못했습니다." });
+      });
+  }, [mix.file_id]);
+
+  const mediaBudget = useMemo(() => {
+    if (!microData?.file_micro) return [];
+    const agg = {};
+    microData.file_micro.forEach(({ m }) => {
+      const media = m.media_mapped || m.media || "기타";
+      agg[media] = (agg[media] || 0) + (Number(m.budget_krw) || 0);
+    });
+    const total = Object.values(agg).reduce((s, v) => s + v, 0);
+    if (total === 0) return [];
+    return Object.entries(agg)
+      .map(([name, value]) => ({ name, value, pct: value / total }))
+      .sort((a, b) => b.value - a.value);
+  }, [microData]);
+
+  const industries = toArr(mix.ind_depth1);
+  const mixSheets = toArr(mix.mixSheets);
+  const gender = GENDER_LABEL[mix.target_gender] || mix.target_gender || "-";
+  const ageRange =
+    mix.target_age_min != null || mix.target_age_max != null
+      ? `${mix.target_age_min ?? "-"} ~ ${mix.target_age_max ?? "-"}`
+      : "-";
+  const budget =
+    mix.budget_sum != null
+      ? `${Number(mix.budget_sum).toLocaleString()}원`
+      : "-";
+  const microItems = (microData?.file_micro || []).map(({ m }) => m);
+  const similarMixes = (microData?.similar_top || []).map(({ t }) => t);
+  const hasMicro = microData != null;
+
+  return (
+    <div className="mix-detail">
+      <button className="mix-back-btn" onClick={onBack}>
+        <ChevronLeft size={14} strokeWidth={2} />
+        목록으로
+      </button>
+
+      {editOpen && (
+        <EditModal
+          fileId={mix.file_id}
+          filePath={mix.file_path}
+          onClose={() => setEditOpen(false)}
+        />
+      )}
+
+      {/* Hero */}
+      <div className="mix-hero">
+        <div className="mix-hero-actions">
+          <button
+            className={`mix-bookmark-btn${isBookmarked ? " mix-bookmark-btn--on" : ""}${isPending ? " mix-bookmark-btn--pending" : ""}`}
+            onClick={() => toggleBookmark(mix.file_id)}
+            disabled={isPending}
+          >
+            {isPending ? (
+              <Loader size={13} strokeWidth={2} className="bm-spin" />
+            ) : isBookmarked ? (
+              <BookmarkCheck size={13} strokeWidth={2} />
+            ) : (
+              <Bookmark size={13} strokeWidth={2} />
+            )}
+            {isPending ? "처리 중..." : isBookmarked ? "북마크됨" : "북마크"}
+          </button>
+          <button
+            className="mix-edit-req-btn"
+            onClick={() => setEditOpen(true)}
+          >
+            <Pencil size={13} strokeWidth={2} />
+            데이터 수정 요청
+          </button>
+        </div>
+
+        <div className="mix-hero-name">{mix.file_path || "-"}</div>
+        <br />
+
+        <div className="mix-hero-body">
+          <div className="mix-hero-info">
+            <div className="mix-info-row">
+              <span className="mix-info-label">
+                예산 (Gross, Market Cost 기준)
+              </span>
+              <span className="mix-info-value">{budget}</span>
+            </div>
+            <div className="mix-info-row mix-info-row--tags">
+              <span className="mix-info-label">업종</span>
+              <span className="mix-info-value">
+                {industries.length > 0 ? (
+                  <span className="mix-info-tags">
+                    {industries.map((i) => (
+                      <span key={i} className="mix-tag mix-tag--ind">
+                        {i}
+                      </span>
+                    ))}
+                  </span>
+                ) : (
+                  "-"
+                )}
+              </span>
+            </div>
+            <div className="mix-info-row">
+              <span className="mix-info-label">타겟 성별</span>
+              <span className="mix-info-value">{gender}</span>
+            </div>
+            <div className="mix-info-row">
+              <span className="mix-info-label">타겟 연령</span>
+              <span className="mix-info-value">{ageRange}</span>
+            </div>
+            {mixSheets.length > 0 && (
+              <div className="mix-info-row mix-info-row--files">
+                <span className="mix-info-label">원본 파일 보기</span>
+                <span className="mix-info-files">
+                  {mixSheets.map((url, i) => (
+                    <a
+                      key={i}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mix-pdf-link"
+                    >
+                      <ExternalLink size={12} strokeWidth={1.8} />
+                      {pdfLabel(url)}
+                    </a>
+                  ))}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="mix-hero-chart">
+            <div className="mix-hero-chart-title">
+              매체 구성별 예산 비중
+              <span className="mix-info-label-note">
+                Gross, Market Cost 기준
+              </span>
+            </div>
+            {microLoading && (
+              <div className="mix-chart-placeholder">집계 중...</div>
+            )}
+            {!microLoading && mediaBudget.length > 0 && (
+              <DonutChart data={mediaBudget} />
+            )}
+            {!microLoading && hasMicro && mediaBudget.length === 0 && (
+              <div className="mix-chart-placeholder">예산 데이터 없음</div>
+            )}
+            {!microLoading && !hasMicro && !microError && (
+              <div className="mix-chart-placeholder">
+                데이터를 불러오는 중...
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {microError && (
+        <div className="mix-micro-state mix-micro-state--error">
+          {microError}
+        </div>
+      )}
+
+      <br />
+
+      {/* 상세 집행 내역 */}
+      {hasMicro && (
+        <div className="mix-detail-section">
+          <div className="mix-detail-section-hdr">
+            <span className="mix-detail-section-title">Media Mix</span>
+          </div>
+          <MixMicroGrid items={microItems} />
+        </div>
+      )}
+
+      <br />
+
+      {/* 유사 미디어믹스 */}
+      {hasMicro && similarMixes.length > 0 && (
+        <div className="mix-micro-wrap">
+          <div className="mix-detail-section-hdr">
+            <span className="mix-detail-section-title">
+              이 믹스와 유사한 믹스
+            </span>
+          </div>
+          <div className="similar-grid">
+            {similarMixes.map((item, i) => {
+              const cardId = Number(item.file_id);
+              const cardBm = bookmarkedIds.has(cardId);
+              return (
+                <div
+                  key={i}
+                  className="similar-card"
+                  onClick={() => onSelect?.(item)}
+                >
+                  {cardBm && (
+                    <span className="similar-card-bm">
+                      <BookmarkCheck size={13} strokeWidth={2} />
+                    </span>
+                  )}
+                  <div className="similar-card-name">{item.file_path || "-"}</div>
+                  <div className="similar-card-tags">
+                    {toArr(item.medias).map((m) => (
+                      <span key={m} className="mix-tag">
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="similar-card-stats">
+                    <div>
+                      <span className="similar-stat-label">
+                        예산 (Gross, Market Cost)
+                      </span>
+                      <span className="similar-stat-value">
+                        {fmtBudget(item.budget_sum)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <br />
+      <hr />
+      <br />
+    </div>
+  );
+}
