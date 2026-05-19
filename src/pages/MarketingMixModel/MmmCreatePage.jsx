@@ -27,7 +27,7 @@ export default function MmmCreatePage() {
   const [username, setUsername] = useState("");
   const [modelname, setModelname] = useState("");
   const [modelId, setModelId] = useState("");
-  const [modeltime, setModeltime] = useState("");
+  const [model_dttm, setModel_dttm] = useState("");
 
   /* Step 01 */
   const [trainset, setTrainset] = useState(emptyTrainset());
@@ -83,10 +83,10 @@ export default function MmmCreatePage() {
   const rfAliases = validMediaRf.map((r) => r.alias);
 
   /* ── step handlers ── */
-  const handleNext00 = async ({ username: u, modelname: m }) => {
-    const id = await makeModelId(m, u);
+  const handleNext00 = ({ username: u, modelname: m }) => {
+    const id = makeModelId();
     setModelId(id);
-    setModeltime(getCurrentTimestamp());
+    setModel_dttm(getCurrentTimestamp());
     setStep(1);
   };
 
@@ -109,9 +109,9 @@ export default function MmmCreatePage() {
     setShowConfirm(false);
     setLoading(true);
 
-    const inputset = {
-      modelid: modelId,
-      modeltime,
+    const input_set = {
+      model_id: modelId,
+      model_dttm,
       input_username: username,
       input_modelname: modelname,
       column_time: [timeCol],
@@ -151,7 +151,12 @@ export default function MmmCreatePage() {
     };
 
     try {
-      await axios.post(`${endpoint}/mmm/create`, { inputset, trainset });
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `${endpoint}/mmm/create/`,
+        { input_set, train_set: trainset },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
       setCreatedId(modelId);
       setCreatedName(modelname);
       setStep(4);

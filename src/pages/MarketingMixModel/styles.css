@@ -12,7 +12,7 @@
 .mmm-steps {
   display: flex;
   align-items: center;
-  gap: 0;
+  width: 100%;
   overflow-x: auto;
   padding-bottom: 4px;
 }
@@ -62,11 +62,11 @@
 .mmm-step--done .mmm-step-label   { color: var(--text-secondary); }
 
 .mmm-step-sep {
-  width: 28px;
+  flex: 1;
   height: 1px;
   background: var(--border);
-  margin: 0 4px;
-  flex-shrink: 0;
+  margin: 0 8px;
+  min-width: 16px;
 }
 
 /* ── Card ── */
@@ -137,7 +137,7 @@
   color: var(--text);
   padding: 7px 10px;
   font-size: 0.9rem;
-  font-family: var(--font-data);
+  font-family: var(--font-body);
   width: 120px;
   outline: none;
 }
@@ -161,6 +161,182 @@
   cursor: pointer;
 }
 
+/* ── Section Header ── */
+.mmm-section-hdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 8px 0 10px 12px;
+  border-bottom: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, rgba(99,102,241,0.04) 0%, transparent 60%);
+}
+
+.mmm-section-num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.12);
+  padding: 2px 8px;
+  font-family: var(--font-body);
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.mmm-section-hdr-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--font-headline);
+}
+
+.mmm-section-tag {
+  font-size: 0.63rem;
+  font-weight: 700;
+  color: #4fc98f;
+  background: rgba(79, 201, 143, 0.1);
+  padding: 2px 7px;
+  letter-spacing: 0.03em;
+  margin-left: 2px;
+  border: 1px solid rgba(79, 201, 143, 0.25);
+}
+
+.mmm-section-tag--opt {
+  color: var(--text-tertiary);
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+/* ── Basic var cards ── */
+.mmm-var-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.mmm-var-card {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mmm-var-card:first-child { border-top: 2px solid #9b59b6; }
+.mmm-var-card:last-child  { border-top: 2px solid #e15f4f; }
+
+.mmm-var-card-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.mmm-var-card-desc {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.mmm-var-card-select {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ── Toggle radio ── */
+.mmm-toggle-group {
+  display: flex;
+  gap: 0;
+}
+
+.mmm-toggle-btn {
+  padding: 7px 22px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-left: -1px;
+  user-select: none;
+}
+
+.mmm-toggle-btn:first-child { margin-left: 0; }
+.mmm-toggle-btn:hover:not(.mmm-toggle-btn--active) {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.mmm-toggle-btn--active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.08);
+  z-index: 1;
+  position: relative;
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+/* ── KPI type description ── */
+.mmm-kpi-type-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.mmm-toggle-descs {
+  display: flex;
+  gap: 0;
+}
+
+.mmm-toggle-desc {
+  flex: 1;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  padding: 5px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mmm-toggle-desc--active {
+  flex: 1;
+  font-size: 0.75rem;
+  color: var(--accent);
+  padding: 5px 18px;
+  border-bottom: 2px solid var(--accent);
+  font-weight: 600;
+}
+
+/* ── RF reach row ── */
+.mmm-rf-reach-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+/* ── Control list ── */
+.mmm-control-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.mmm-control-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mmm-control-row .mmm-select {
+  min-width: 220px;
+}
+
 /* ── Text helpers ── */
 .mmm-desc {
   font-size: 0.825rem;
@@ -180,12 +356,13 @@
 
 .mmm-example-box {
   border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
   background: var(--bg);
   padding: 12px 16px;
   margin-bottom: 14px;
   font-size: 0.82rem;
   color: var(--text-secondary);
-  line-height: 1.75;
+  line-height: 1.85;
 }
 
 .mmm-example-box code {
@@ -297,17 +474,19 @@
   align-items: center;
   gap: 5px;
   font-size: 0.78rem;
+  font-weight: 600;
   color: var(--accent);
   background: none;
   border: 1px dashed var(--accent);
-  padding: 5px 12px;
+  padding: 6px 16px;
   cursor: pointer;
-  margin-top: 6px;
+  margin-top: 8px;
   transition: background 0.15s;
   font-family: var(--font-body);
+  opacity: 0.8;
 }
 
-.mmm-add-row-btn:hover { background: rgba(99, 102, 241, 0.06); }
+.mmm-add-row-btn:hover { background: rgba(99, 102, 241, 0.06); opacity: 1; }
 
 .mmm-del-btn {
   background: none;
@@ -394,18 +573,140 @@
   line-height: 1;
 }
 
+/* ── Upload two-column layout ── */
+.mmm-upload-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 4px;
+}
+
+.mmm-upload-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Requirements box ── */
+.mmm-req-box {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 14px 16px;
+}
+
+.mmm-req-title {
+  display: flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.mmm-req-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.mmm-req-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.mmm-req-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.mmm-req-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.mmm-req-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 1px 5px;
+  letter-spacing: 0.03em;
+}
+
+.mmm-req-desc {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* ── Upload tips ── */
+.mmm-upload-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 4px;
+}
+
+.mmm-upload-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  line-height: 1.45;
+}
+
+.mmm-upload-tip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
 /* ── Upload area ── */
 .mmm-upload-area {
   border: 2px dashed var(--border);
-  padding: 24px;
+  padding: 28px 20px;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background 0.15s;
   position: relative;
-  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
 }
 
 .mmm-upload-area:hover { border-color: var(--accent); }
+
+.mmm-upload-area--drag {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.mmm-upload-area--done {
+  border-color: #4fc98f;
+  background: rgba(79, 201, 143, 0.04);
+}
 
 .mmm-upload-area input[type="file"] {
   position: absolute;
@@ -419,11 +720,77 @@
 .mmm-upload-text {
   font-size: 0.875rem;
   color: var(--text-secondary);
-  margin-top: 8px;
+  margin: 0;
+  line-height: 1.6;
 }
 
 .mmm-upload-text strong { color: var(--accent); }
 
+/* ── Upload loading state ── */
+@keyframes mmm-spin {
+  to { transform: rotate(360deg); }
+}
+
+.mmm-upload-loading { text-align: center; }
+
+.mmm-spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: mmm-spin 0.75s linear infinite;
+  margin: 0 auto 10px;
+}
+
+/* ── Upload success state ── */
+.mmm-upload-success { text-align: center; }
+
+.mmm-upload-filename {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 8px 0 4px;
+  word-break: break-all;
+}
+
+.mmm-upload-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-family: var(--font-data);
+}
+
+.mmm-upload-stats-sep { color: var(--border); }
+
+.mmm-sample-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 4px 10px;
+  text-decoration: none;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.mmm-sample-download-btn:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.mmm-upload-hint {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+}
+
+/* ── legacy ── */
 .mmm-file-info {
   display: flex;
   align-items: center;
@@ -487,22 +854,93 @@
 .mmm-sample-table {
   border-collapse: collapse;
   font-size: 0.78rem;
-  width: max-content;
+  width: 100%;
+  min-width: max-content;
+}
+
+.mmm-sample-group-row th {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 5px 16px;
+  text-align: center;
+  border: 1px solid var(--border);
+  white-space: nowrap;
 }
 
 .mmm-sample-table th {
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 6px 10px;
+  padding: 6px 16px;
   font-weight: 700;
   text-align: center;
+  white-space: nowrap;
 }
 
 .mmm-sample-table td {
   border: 1px solid var(--border);
-  padding: 5px 10px;
+  padding: 5px 16px;
   text-align: center;
   color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ── Sub-section header ── */
+.mmm-subsection-hdr {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin: 20px 0 8px;
+  padding-left: 8px;
+  border-left: 2px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Lag layout ── */
+.mmm-lag-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.mmm-lag-block {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 14px 16px;
+}
+
+.mmm-lag-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mmm-lag-suffix {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.mmm-lag-unit {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  margin-left: 4px;
+}
+
+/* ── RF target grid ── */
+.mmm-rf-target-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.mmm-rf-target-grid .mmm-var-card {
+  border-top: 2px solid #4f80e1;
 }
 
 /* ── Nav buttons ── */
@@ -617,13 +1055,66 @@
 .mmm-complete-info {
   display: inline-flex;
   flex-direction: column;
-  gap: 6px;
   background: var(--bg);
   border: 1px solid var(--border);
-  padding: 14px 24px;
+  padding: 0;
   text-align: left;
   margin-bottom: 28px;
   font-size: 0.85rem;
+  min-width: 320px;
+}
+
+.mmm-complete-info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+}
+
+.mmm-complete-info-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.mmm-complete-info-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  min-width: 52px;
+}
+
+.mmm-complete-info-value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.mmm-complete-model-id {
+  color: var(--accent);
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.mmm-copy-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.mmm-copy-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .mmm-complete-actions {

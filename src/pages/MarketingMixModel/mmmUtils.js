@@ -8,13 +8,14 @@ export const emptyTrainset = () => ({
   colnames: [], numericColnames: [], rows: [], rowCount: 0, colCount: 0,
 });
 
-export async function makeModelId(modelname, username) {
-  const str = modelname + username + Date.now() + Math.random();
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("")
-    .slice(0, 20);
+export function makeModelId() {
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(2);
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const rand = Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  return `mmm-${yy}${mm}${dd}-${rand}`;
 }
 
 export function getCurrentTimestamp() {

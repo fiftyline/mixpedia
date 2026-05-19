@@ -176,7 +176,7 @@ export default function MmmMyModelsPage() {
                         )}
                       </td>
                       <td>{row.input_modelname}</td>
-                      <td style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>{row.modeltime}</td>
+                      <td style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>{row.model_dttm}</td>
                       <td style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>{row.status_time}</td>
                       <td><StatusBadge status={row.status} /></td>
                       <td>
