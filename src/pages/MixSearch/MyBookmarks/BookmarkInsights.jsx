@@ -450,7 +450,6 @@ export default function BookmarkInsights({ mixIds, onBack }) {
       )}
 
       <br />
-      <hr />
       <br />
     </div>
   );

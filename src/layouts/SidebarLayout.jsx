@@ -1,11 +1,13 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 const MIX_PATHS = ['/mix-search', '/my-bookmarks'];
+const MMM_PATHS = ['/mmm/create', '/mmm/my-models'];
 
 export default function SidebarLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const inMixGroup = MIX_PATHS.some((p) => location.pathname.startsWith(p));
+  const inMmmGroup = MMM_PATHS.some((p) => location.pathname.startsWith(p));
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -39,6 +41,19 @@ export default function SidebarLayout() {
         <NavLink to="/media-insight" className="sidebar-link">
           Media
         </NavLink>
+
+        {/* MMM group */}
+        <div className={`sidebar-group-label${inMmmGroup ? " sidebar-group-label--active" : ""}`}>
+          Marketing Mix Modeling
+        </div>
+        <div className="sidebar-subnav">
+          <NavLink to="/mmm/create" className="sidebar-sublink">
+            모델 생성
+          </NavLink>
+          <NavLink to="/mmm/my-models" className="sidebar-sublink">
+            모델 확인
+          </NavLink>
+        </div>
 
         <a
           href="https://thedap.dmcmedia.co.kr/login"

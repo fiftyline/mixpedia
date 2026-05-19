@@ -1,0 +1,719 @@
+/* ── MMM Page Layout ── */
+.mmm-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+  padding: 0 24px;
+}
+
+/* ── Step Indicator ── */
+.mmm-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.mmm-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.mmm-step-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  background: var(--surface);
+  transition: all 0.2s;
+}
+
+.mmm-step--active .mmm-step-circle {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.mmm-step--done .mmm-step-circle {
+  border-color: #4fc98f;
+  background: #4fc98f;
+  color: #fff;
+}
+
+.mmm-step-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.mmm-step--active .mmm-step-label { color: var(--text); font-weight: 700; }
+.mmm-step--done .mmm-step-label   { color: var(--text-secondary); }
+
+.mmm-step-sep {
+  width: 28px;
+  height: 1px;
+  background: var(--border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── Card ── */
+.mmm-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+}
+
+.mmm-card-title {
+  font-family: var(--font-headline);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Form ── */
+.mmm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.mmm-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mmm-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-family: var(--font-body);
+  width: 100%;
+  max-width: 440px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.mmm-input:focus { border-color: var(--accent); }
+
+.mmm-select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  outline: none;
+  cursor: pointer;
+  min-width: 110px;
+}
+
+.mmm-select:focus { border-color: var(--accent); }
+
+.mmm-number-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 0.9rem;
+  font-family: var(--font-data);
+  width: 120px;
+  outline: none;
+}
+
+.mmm-number-input:focus { border-color: var(--accent); }
+
+/* ── Radio Group ── */
+.mmm-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.mmm-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* ── Text helpers ── */
+.mmm-desc {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+
+.mmm-section-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 20px 0 6px;
+}
+
+.mmm-hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+.mmm-example-box {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.mmm-example-box code {
+  background: var(--surface);
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-family: var(--font-data);
+}
+
+/* ── Basic variable table (Step 02 top) ── */
+.mmm-var-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  margin-bottom: 6px;
+}
+
+.mmm-var-table th {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mmm-var-table td {
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  vertical-align: middle;
+}
+
+.mmm-var-table .mmm-td-label {
+  background: var(--surface);
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.mmm-var-table .mmm-td-desc {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.mmm-var-table .mmm-td-input { background: rgba(99, 102, 241, 0.03); }
+
+.mmm-var-table .mmm-select {
+  max-width: 100%;
+  width: 100%;
+  padding: 5px 8px;
+  font-size: 0.82rem;
+}
+
+/* ── Dynamic media rows table ── */
+.mmm-media-wrap { overflow-x: auto; }
+
+.mmm-media-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  min-width: 640px;
+}
+
+.mmm-media-table th {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 7px 8px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.73rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.mmm-media-table td {
+  border: 1px solid var(--border);
+  padding: 4px 5px;
+  vertical-align: middle;
+  background: rgba(99, 102, 241, 0.025);
+}
+
+.mmm-media-table .mmm-input,
+.mmm-media-table .mmm-select {
+  width: 100%;
+  max-width: 100%;
+  padding: 5px 7px;
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.mmm-media-table .mmm-input:focus,
+.mmm-media-table .mmm-select:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: var(--bg);
+}
+
+.mmm-add-row-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: none;
+  border: 1px dashed var(--accent);
+  padding: 5px 12px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.15s;
+  font-family: var(--font-body);
+}
+
+.mmm-add-row-btn:hover { background: rgba(99, 102, 241, 0.06); }
+
+.mmm-del-btn {
+  background: none;
+  border: none;
+  color: #e15f4f;
+  cursor: pointer;
+  padding: 3px 5px;
+  display: flex;
+  align-items: center;
+}
+
+/* ── ROI/Coverage/Optfreq table ── */
+.mmm-roi-table {
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 280px;
+}
+
+.mmm-roi-table th {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 7px 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.mmm-roi-table td {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  vertical-align: middle;
+}
+
+.mmm-roi-table .mmm-roi-alias {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  background: var(--surface);
+  white-space: nowrap;
+}
+
+.mmm-roi-table .mmm-number-input {
+  width: 100px;
+  border: 1px solid transparent;
+  background: rgba(99, 102, 241, 0.03);
+}
+
+.mmm-roi-table .mmm-number-input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ── Alerts ── */
+.mmm-alerts {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mmm-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+  border-left: 3px solid;
+}
+
+.mmm-alert--danger  { background: #fef2f2; border-color: #e15f4f; color: #922b21; }
+.mmm-alert--success { background: #f0fff4; border-color: #4fc98f; color: #1a6640; }
+
+.mmm-alert button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: inherit;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+/* ── Upload area ── */
+.mmm-upload-area {
+  border: 2px dashed var(--border);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  position: relative;
+  max-width: 440px;
+}
+
+.mmm-upload-area:hover { border-color: var(--accent); }
+
+.mmm-upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.mmm-upload-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.mmm-upload-text strong { color: var(--accent); }
+
+.mmm-file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.mmm-file-name { color: var(--accent); font-weight: 600; }
+
+.mmm-shape-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 10px 0 6px;
+}
+
+/* ── Data preview table ── */
+.mmm-preview-wrap {
+  overflow-x: auto;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+
+.mmm-preview-table {
+  border-collapse: collapse;
+  font-size: 0.76rem;
+  width: max-content;
+  min-width: 100%;
+}
+
+.mmm-preview-table th {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+
+.mmm-preview-table td {
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+/* ── Sample data table ── */
+.mmm-sample-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  margin: 10px 0;
+  max-width: 100%;
+}
+
+.mmm-sample-table {
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  width: max-content;
+}
+
+.mmm-sample-table th {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.mmm-sample-table td {
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ── Nav buttons ── */
+.mmm-nav {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.mmm-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 22px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mmm-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.mmm-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.mmm-btn--primary:hover { background: #5254cc; border-color: #5254cc; color: #fff; }
+.mmm-btn:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+/* ── Confirm Modal ── */
+.mmm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mmm-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  max-width: 520px;
+  width: 90%;
+}
+
+.mmm-modal-title {
+  font-family: var(--font-headline);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.mmm-modal-body {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.mmm-confirm-list {
+  list-style: none;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  margin: 12px 0 18px;
+  font-size: 0.84rem;
+  line-height: 1.9;
+}
+
+.mmm-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ── Completion ── */
+.mmm-complete-box {
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.mmm-complete-icon { color: #4fc98f; margin-bottom: 16px; }
+
+.mmm-complete-title {
+  font-family: var(--font-headline);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.mmm-complete-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 28px;
+}
+
+.mmm-complete-info {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 14px 24px;
+  text-align: left;
+  margin-bottom: 28px;
+  font-size: 0.85rem;
+}
+
+.mmm-complete-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ── My Models Page ── */
+.mmm-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px 20px;
+  margin-bottom: 16px;
+}
+
+.mmm-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mmm-query-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 9px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.15s;
+}
+
+.mmm-query-btn:hover { background: #5254cc; }
+.mmm-query-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.mmm-models-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.mmm-models-table th {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 9px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.mmm-models-table td {
+  border: 1px solid var(--border);
+  padding: 9px 12px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.mmm-models-table tr:hover td { background: var(--bg); }
+
+.mmm-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.mmm-link:hover { text-decoration: underline; }
+
+/* ── Status badges ── */
+.mmm-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mmm-badge--complete { background: #d1fae5; color: #065f46; }
+.mmm-badge--progress { background: #fef3c7; color: #78350f; }
+.mmm-badge--error    { background: #fee2e2; color: #7f1d1d; }
+.mmm-badge--other    { background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); }
