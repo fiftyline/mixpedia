@@ -90,53 +90,6 @@ function buildRescurveOption(rescurve, optcurve, optionset) {
   };
 }
 
-function buildOptimize1Option(optcurve, optionset) {
-  const mediaList = [
-    ...(optionset?.media_alias ?? []),
-    ...(optionset?.media_rf_alias ?? []),
-  ];
-  const budgetList = ["budget_origin", "budget_100%"];
-
-  return {
-    color: ROMA1,
-    tooltip: {
-      trigger: "axis",
-      axisPointer: { type: "shadow" },
-      formatter: (params) => {
-        if (!params.length) return "";
-        const label = params[0].axisValue;
-        const total = params.reduce(
-          (s, p) => s + (typeof p.value === "number" ? p.value : 0),
-          0,
-        );
-        const items = params.map((p) => {
-          const cost = typeof p.value === "number" ? p.value : 0;
-          const ratio = total > 0 ? (cost / total) * 100 : 0;
-          return `${p.marker} ${p.seriesName}: ${cost.toLocaleString()} (${ratio.toFixed(2)}%)`;
-        });
-        return `${label}<br/>${items.join("<br/>")}`;
-      },
-    },
-    xAxis: {
-      type: "category",
-      data: ["현재 예산 비율", "현재 예산 대비\n100%"],
-      axisLabel: { fontSize: 10, fontWeight: "bold" },
-    },
-    yAxis: { type: "value" },
-    grid: { left: 80, right: 20, top: 20, bottom: 40, containLabel: true },
-    series: mediaList.map((media) => ({
-      name: media,
-      type: "bar",
-      stack: "total",
-      emphasis: { focus: "series" },
-      data: budgetList.map((b) => {
-        const found = optcurve.find((d) => d.media === media && d.budget === b);
-        return found ? found.cost : 0;
-      }),
-    })),
-  };
-}
-
 function buildOptimize2Option(optcurve, optionset) {
   const mediaList = [
     ...(optionset?.media_alias ?? []),
@@ -149,21 +102,13 @@ function buildOptimize2Option(optcurve, optionset) {
 
   return {
     color: ROMA1,
-    title: {
-      text: "최적 예산 비율",
-      top: "top",
-      textStyle: { fontSize: 14, fontWeight: "bold" },
-    },
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
       formatter: (params) => {
         if (!params.length) return "";
         const label = params[0].axisValue;
-        const total = params.reduce(
-          (s, p) => s + (typeof p.value === "number" ? p.value : 0),
-          0,
-        );
+        const total = params.reduce((s, p) => s + (typeof p.value === "number" ? p.value : 0), 0);
         const items = params.map((p) => {
           const cost = typeof p.value === "number" ? p.value : 0;
           const ratio = total > 0 ? (cost / total) * 100 : 0;
@@ -183,6 +128,50 @@ function buildOptimize2Option(optcurve, optionset) {
     },
     yAxis: { type: "value" },
     grid: { left: 80, right: 20, top: 60, bottom: 40, containLabel: true },
+    series: mediaList.map((media) => ({
+      name: media,
+      type: "bar",
+      stack: "total",
+      emphasis: { focus: "series" },
+      data: budgetList.map((b) => {
+        const found = optcurve.find((d) => d.media === media && d.budget === b);
+        return found ? found.cost : 0;
+      }),
+    })),
+  };
+}
+
+function buildOptimize1Option(optcurve, optionset) {
+  const mediaList = [
+    ...(optionset?.media_alias ?? []),
+    ...(optionset?.media_rf_alias ?? []),
+  ];
+  const budgetList = ["budget_origin", "budget_100%"];
+
+  return {
+    color: ROMA1,
+    tooltip: {
+      trigger: "axis",
+      axisPointer: { type: "shadow" },
+      formatter: (params) => {
+        if (!params.length) return "";
+        const label = params[0].axisValue;
+        const total = params.reduce((s, p) => s + (typeof p.value === "number" ? p.value : 0), 0);
+        const items = params.map((p) => {
+          const cost = typeof p.value === "number" ? p.value : 0;
+          const ratio = total > 0 ? (cost / total) * 100 : 0;
+          return `${p.marker} ${p.seriesName}: ${cost.toLocaleString()} (${ratio.toFixed(2)}%)`;
+        });
+        return `${label}<br/>${items.join("<br/>")}`;
+      },
+    },
+    xAxis: {
+      type: "category",
+      data: ["현재 예산 비율", "현재 예산 대비\n100%"],
+      axisLabel: { fontSize: 10, fontWeight: "bold" },
+    },
+    yAxis: { type: "value" },
+    grid: { left: 80, right: 20, top: 20, bottom: 40, containLabel: true },
     series: mediaList.map((media) => ({
       name: media,
       type: "bar",
@@ -234,9 +223,7 @@ export default function TabOptimize({ data }) {
                 ? `${(v * 100).toFixed(2)}%`
                 : v.toLocaleString(undefined, { maximumFractionDigits: 0 })
               : v;
-          return html(
-            `<span style="font-family:var(--font-data);font-size:11px">${formatted}</span>`,
-          );
+          return html(`<span style="font-family:var(--font-data);font-size:11px">${formatted}</span>`);
         },
       })),
     ];
@@ -262,9 +249,11 @@ export default function TabOptimize({ data }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+      {/* ── Curve ── */}
       {hasCurve && hasOptcurve && (
         <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">반응 곡선 (Response Curve)</div>
+          <div className="mmm-card-title">Curve</div>
           <ReactECharts
             option={buildRescurveOption(rescurve, optcurve, optionset)}
             style={{ height: 400 }}
@@ -273,34 +262,29 @@ export default function TabOptimize({ data }) {
         </div>
       )}
 
+      {/* ── Optimize ── */}
       {hasOptcurve && (
         <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">현재 vs 100% 예산 배분</div>
-          <ReactECharts
-            option={buildOptimize1Option(optcurve, optionset)}
-            style={{ height: 360 }}
-            opts={{ renderer: "svg" }}
-          />
+          <div className="mmm-card-title">Optimize</div>
+          <div className="mmm-chart-sub-label">예산 배분 최적화</div>
+          <div className="mmm-two-col-charts">
+            <ReactECharts
+              option={buildOptimize2Option(optcurve, optionset)}
+              style={{ height: 400 }}
+              opts={{ renderer: "svg" }}
+            />
+            <ReactECharts
+              option={buildOptimize1Option(optcurve, optionset)}
+              style={{ height: 400 }}
+              opts={{ renderer: "svg" }}
+            />
+          </div>
+          {hasDf && (
+            <div className="mmm-gridjs-wrap" ref={tableRef} style={{ marginTop: 20 }} />
+          )}
         </div>
       )}
 
-      {hasOptcurve && (
-        <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">예산 배율별 최적 배분</div>
-          <ReactECharts
-            option={buildOptimize2Option(optcurve, optionset)}
-            style={{ height: 400 }}
-            opts={{ renderer: "svg" }}
-          />
-        </div>
-      )}
-
-      {hasDf && (
-        <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">예산 시나리오별 배분 비율</div>
-          <div className="mmm-gridjs-wrap" ref={tableRef} />
-        </div>
-      )}
     </div>
   );
 }

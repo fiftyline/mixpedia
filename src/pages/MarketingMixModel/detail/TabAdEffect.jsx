@@ -270,9 +270,7 @@ export default function TabAdEffect({ data }) {
     if (!tableRef.current || !hasAdstock) return;
 
     const integerRows = adstock.filter((d) => Number.isInteger(d.seq));
-    const uniqueSeqs = [...new Set(integerRows.map((d) => d.seq))].sort(
-      (a, b) => a - b,
-    );
+    const uniqueSeqs = [...new Set(integerRows.map((d) => d.seq))].sort((a, b) => a - b);
 
     const columns = [
       { name: "매체", id: "media" },
@@ -280,21 +278,15 @@ export default function TabAdEffect({ data }) {
         name: `${seq}${timeseq}`,
         id: String(seq),
         formatter: (v) =>
-          html(
-            `<span style="font-family:var(--font-data);font-size:11px">${v ?? "-"}</span>`,
-          ),
+          html(`<span style="font-family:var(--font-data);font-size:11px">${v ?? "-"}</span>`),
       })),
     ];
 
     const tableData = mediaList.map((media) => {
       const row = { media };
       uniqueSeqs.forEach((seq) => {
-        const found = integerRows.find(
-          (d) => d.media === media && d.seq === seq,
-        );
-        row[String(seq)] = found
-          ? `${(found.adstock_med * 100).toFixed(2)}%`
-          : "-";
+        const found = integerRows.find((d) => d.media === media && d.seq === seq);
+        row[String(seq)] = found ? `${(found.adstock_med * 100).toFixed(2)}%` : "-";
       });
       return row;
     });
@@ -314,27 +306,27 @@ export default function TabAdEffect({ data }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+      {/* ── Carry Over ── */}
       {hasAdstock && (
         <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">광고 이월 효과 (Adstock)</div>
+          <div className="mmm-card-title">Carry Over</div>
+          <div className="mmm-chart-sub-label">광고 이월 효과</div>
           <ReactECharts
             option={buildAdstockOption(adstock, optionset)}
             style={{ height: adstockHeight }}
             opts={{ renderer: "svg" }}
           />
-        </div>
-      )}
-
-      {hasAdstock && (
-        <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">Adstock 계수 테이블</div>
+          <hr className="mmm-hr" />
           <div className="mmm-gridjs-wrap" ref={tableRef} />
         </div>
       )}
 
+      {/* ── Saturation ── */}
       {hasRF && freqhist?.length > 0 && (
         <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">빈도 포화도 (Saturation)</div>
+          <div className="mmm-card-title">Saturation</div>
+          <div className="mmm-chart-sub-label">매체별 포화도 곡선</div>
           <ReactECharts
             option={buildSaturationOption(freqhist, optfreq, optionset)}
             style={{ height: satHeight }}
@@ -342,6 +334,7 @@ export default function TabAdEffect({ data }) {
           />
         </div>
       )}
+
     </div>
   );
 }

@@ -1493,3 +1493,147 @@
   border-left: 3px solid var(--accent);
   background: linear-gradient(90deg, rgba(99,102,241,0.04) 0%, transparent 60%);
 }
+
+/* ── Detail Header (info cards) ── */
+.mmm-detail-header-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px 28px;
+}
+
+.mmm-detail-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.mmm-detail-meta-key {
+  font-weight: 700;
+  color: var(--text-tertiary);
+  margin-right: 5px;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.mmm-info-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 1200px) {
+  .mmm-info-cards { grid-template-columns: repeat(3, 1fr); }
+}
+
+.mmm-info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+}
+
+.mmm-info-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mmm-info-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mmm-info-card-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mmm-info-card-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.mmm-info-card-sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: var(--font-data);
+}
+
+/* ── Overview performance 2-col ── */
+.mmm-overview-perf-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.mmm-perf-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.mmm-perf-table th {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mmm-perf-table td {
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: var(--font-data);
+  color: var(--accent);
+  text-align: center;
+}
+
+.mmm-perf-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.mmm-perf-desc strong { color: var(--accent); }
+
+/* ── Two-col chart layout ── */
+.mmm-two-col-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Chart sub-label ── */
+.mmm-chart-sub-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}

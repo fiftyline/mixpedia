@@ -56,7 +56,6 @@ function buildStackOption(bytime, optionset) {
   ];
   const baseline = bytime.filter((d) => d.metric === "incremental_kpi_BASELINE");
   const times = baseline.map((d) => d.time_index);
-
   return {
     color: ROMA,
     tooltip: { trigger: "axis", axisPointer: { type: "line" } },
@@ -280,7 +279,8 @@ function buildRoiCiOption(summary) {
 }
 
 export default function TabOverview({ data }) {
-  const { attributionByTime, attributionSummary, optionset } = data;
+  const { attributionByTime, attributionSummary, optionset, overviewCmt } = data;
+  const cmt = overviewCmt?.[0] ?? {};
   const tableRef = useRef(null);
   const gridRef = useRef(null);
 
@@ -293,7 +293,7 @@ export default function TabOverview({ data }) {
     const columns = [
       { name: "매체", id: "media_alias" },
       {
-        name: "예산",
+        name: "집행 비용",
         id: "cost",
         formatter: (v) =>
           html(`<span style="font-family:var(--font-data);font-size:11px">${
@@ -303,7 +303,7 @@ export default function TabOverview({ data }) {
           }</span>`),
       },
       {
-        name: "예산 비율",
+        name: "집행 비율(%)",
         id: "cost_ratio",
         formatter: (v) =>
           html(`<span style="font-family:var(--font-data);font-size:11px">${
@@ -311,7 +311,7 @@ export default function TabOverview({ data }) {
           }</span>`),
       },
       {
-        name: "기여 KPI",
+        name: "매체 기여 KPI",
         id: "incremental_kpi",
         formatter: (v) =>
           html(`<span style="font-family:var(--font-data);font-size:11px">${
@@ -321,7 +321,7 @@ export default function TabOverview({ data }) {
           }</span>`),
       },
       {
-        name: "KPI 비율",
+        name: "매체 기여 KPI 비율(%)",
         id: "incremental_kpi_ratio",
         formatter: (v) =>
           html(`<span style="font-family:var(--font-data);font-size:11px">${
@@ -329,7 +329,7 @@ export default function TabOverview({ data }) {
           }</span>`),
       },
       {
-        name: "ROI",
+        name: "ROI(%)",
         id: "roi",
         formatter: (v) =>
           html(`<span style="font-family:var(--font-data);font-size:11px">${
@@ -360,67 +360,94 @@ export default function TabOverview({ data }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+      {/* ── Section 1: 모델 성능 ── */}
       {hasBytime && (
         <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">KPI 예측 vs 실제</div>
-          <ReactECharts
-            option={buildKpiOption(attributionByTime)}
-            style={{ height: 400 }}
-            opts={{ renderer: "svg" }}
-          />
+          <div className="mmm-overview-perf-layout">
+            <div>
+              <table className="mmm-perf-table">
+                <thead>
+                  <tr>
+                    <th>R² Score</th>
+                    <th>MAPE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{cmt.model_r2 != null ? `${cmt.model_r2}%` : "—"}</td>
+                    <td>{cmt.model_mape != null ? `${cmt.model_mape}%` : "—"}</td>
+                  </tr>
+                </tbody>
+              </table>
+              {cmt.overview_comment && (
+                <p
+                  className="mmm-perf-desc"
+                  dangerouslySetInnerHTML={{ __html: cmt.overview_comment }}
+                />
+              )}
+            </div>
+            <ReactECharts
+              option={buildKpiOption(attributionByTime)}
+              style={{ height: 300 }}
+              opts={{ renderer: "svg" }}
+            />
+          </div>
         </div>
       )}
 
-      {hasBytime && (
-        <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">매체별 기여 KPI (누적)</div>
-          <ReactECharts
-            option={buildStackOption(attributionByTime, optionset)}
-            style={{ height: 400 }}
-            opts={{ renderer: "svg" }}
-          />
-        </div>
-      )}
-
-      {hasBytime && (
-        <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">기여 KPI 합계 (폭포수)</div>
-          <ReactECharts
-            option={buildWaterfallOption(attributionByTime, optionset)}
-            style={{ height: 400 }}
-            opts={{ renderer: "svg" }}
-          />
-        </div>
-      )}
-
+      {/* ── Section 2: Summary ── */}
       {hasSummary && (
         <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">예산 vs KPI 기여 비율</div>
-          <ReactECharts
-            option={buildRoiBarOption(attributionSummary)}
-            style={{ height: 360 }}
-            opts={{ renderer: "svg" }}
-          />
-        </div>
-      )}
-
-      {hasSummary && (
-        <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">ROI 및 95% 신뢰구간</div>
-          <ReactECharts
-            option={buildRoiCiOption(attributionSummary)}
-            style={{ height: 360 }}
-            opts={{ renderer: "svg" }}
-          />
-        </div>
-      )}
-
-      {hasSummary && (
-        <div className="mmm-card">
-          <div className="mmm-card-title mmm-card-title--section">매체별 기여 요약</div>
+          <div className="mmm-card-title">Summary</div>
           <div className="mmm-gridjs-wrap" ref={tableRef} />
         </div>
       )}
+
+      {/* ── Section 3: Media ── */}
+      {hasBytime && (
+        <div className="mmm-card">
+          <div className="mmm-card-title">Media</div>
+          <div className="mmm-two-col-charts">
+            <div>
+              <div className="mmm-chart-sub-label">매체별 기여 KPI (시간)</div>
+              <ReactECharts
+                option={buildStackOption(attributionByTime, optionset)}
+                style={{ height: 340 }}
+                opts={{ renderer: "svg" }}
+              />
+            </div>
+            <div>
+              <ReactECharts
+                option={buildWaterfallOption(attributionByTime, optionset)}
+                style={{ height: 340 }}
+                opts={{ renderer: "svg" }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Section 4: ROI ── */}
+      {hasSummary && (
+        <div className="mmm-card">
+          <div className="mmm-card-title">ROI</div>
+          <div className="mmm-chart-sub-label">매체별 ROI</div>
+          <div className="mmm-two-col-charts">
+            <ReactECharts
+              option={buildRoiBarOption(attributionSummary)}
+              style={{ height: 340 }}
+              opts={{ renderer: "svg" }}
+            />
+            <ReactECharts
+              option={buildRoiCiOption(attributionSummary)}
+              style={{ height: 340 }}
+              opts={{ renderer: "svg" }}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

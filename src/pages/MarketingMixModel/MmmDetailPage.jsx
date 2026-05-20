@@ -47,12 +47,10 @@ export default function MmmDetailPage() {
 
   return (
     <div className="mmm-page">
-      <div className="page-header">
+      <div>
         <button className="mmm-back-btn" onClick={() => navigate("/mmm/my-mmm")}>
           <ChevronLeft size={14} /> 목록으로
         </button>
-        <h1 className="page-title">{data?.modelname ?? "분석 결과"}</h1>
-        <p className="page-desc">MMM 분석 결과 상세 보고서</p>
       </div>
 
       {loading && <div className="mix-micro-state">데이터를 불러오는 중...</div>}
