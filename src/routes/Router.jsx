@@ -5,6 +5,7 @@ import MediaInsightPage from "../pages/MediaInsight";
 import MyBookmarksPage from "../pages/MixSearch/MyBookmarks";
 import MmmCreatePage from "../pages/MarketingMixModel/MmmCreatePage";
 import MmmMyModelsPage from "../pages/MarketingMixModel/MmmMyModelsPage";
+import MmmDetailPage from "../pages/MarketingMixModel/MmmDetailPage";
 import LoginPage from "../pages/Login/LoginPage";
 import PrivateRoute from "./PrivateRoute";
 
@@ -20,7 +21,8 @@ export default function Router() {
             <Route path="/my-bookmarks" element={<MyBookmarksPage />} />
             <Route path="/media-insight" element={<MediaInsightPage />} />
             <Route path="/mmm/create" element={<MmmCreatePage />} />
-            <Route path="/mmm/my-models" element={<MmmMyModelsPage />} />
+            <Route path="/mmm/my-mmm" element={<MmmMyModelsPage />} />
+            <Route path="/mmm/my-mmm/:model_id" element={<MmmDetailPage />} />
           </Route>
         </Route>
       </Routes>

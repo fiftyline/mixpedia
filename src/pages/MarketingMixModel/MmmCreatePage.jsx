@@ -83,9 +83,8 @@ export default function MmmCreatePage() {
   const rfAliases = validMediaRf.map((r) => r.alias);
 
   /* ── step handlers ── */
-  const handleNext00 = ({ username: u, modelname: m }) => {
-    const id = makeModelId();
-    setModelId(id);
+  const handleNext00 = () => {
+    setModelId(makeModelId());
     setModel_dttm(getCurrentTimestamp());
     setStep(1);
   };
@@ -172,7 +171,7 @@ export default function MmmCreatePage() {
     setUsername("");
     setModelname("");
     setModelId("");
-    setModeltime("");
+    setModel_dttm("");
     setTrainset(emptyTrainset());
     setUploadedFile(null);
     setTimeCol("");
@@ -208,7 +207,7 @@ export default function MmmCreatePage() {
           onNext={({ username: u, modelname: m }) => {
             setUsername(u);
             setModelname(m);
-            handleNext00({ username: u, modelname: m });
+            handleNext00();
           }}
         />
       )}

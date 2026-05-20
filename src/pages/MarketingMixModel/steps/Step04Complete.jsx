@@ -41,7 +41,7 @@ export default function Step04Complete({ createdId, createdName, onReset }) {
 
         <div className="mmm-complete-actions">
           <button className="mmm-btn" onClick={onReset}>새 모델 생성</button>
-          <button className="mmm-btn mmm-btn--primary" onClick={() => navigate("/mmm/my-models")}>
+          <button className="mmm-btn mmm-btn--primary" onClick={() => navigate("/mmm/my-mmm")}>
             모델 확인으로 이동
           </button>
         </div>

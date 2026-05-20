@@ -1,7 +1,7 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 const MIX_PATHS = ['/mix-search', '/my-bookmarks'];
-const MMM_PATHS = ['/mmm/create', '/mmm/my-models'];
+const MMM_PATHS = ['/mmm/create', '/mmm/my-mmm'];
 
 export default function SidebarLayout() {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ export default function SidebarLayout() {
           <NavLink to="/mmm/create" className="sidebar-sublink">
             모델 생성
           </NavLink>
-          <NavLink to="/mmm/my-models" className="sidebar-sublink">
+          <NavLink to="/mmm/my-mmm" className="sidebar-sublink">
             모델 확인
           </NavLink>
         </div>
