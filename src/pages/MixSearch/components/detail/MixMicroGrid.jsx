@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Grid, html } from "gridjs";
 import "gridjs/dist/theme/mermaid.min.css";
-import { toArr, GENDER_LABEL } from "../../utils/mixUtils";
+import { toArr, GENDER_LABEL } from "../../../../utils/mixUtils";
 
 const TAG_STYLE =
   "display:inline-block;padding:2px 6px;margin:1px 2px;" +

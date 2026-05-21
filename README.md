@@ -1,83 +1,156 @@
-# Mixpedia
+# Mixpedia — 프로젝트 폴더 구조
 
-미디어 플래닝을 위한 통합 데이터 분석 솔루션.
-미디어믹스 탐색, 매체별 인사이트, 유사 믹스 추천을 한 화면에서 제공한다.
+## 최상위
 
----
-
-## 페이지 구성
-
-### 1. 로그인 (`/`)
-
-- 아이디/비밀번호 기반 인증
-- JWT 토큰 발급 및 로컬 스토리지 저장
-- 인증 성공 시 믹스 검색 페이지로 자동 이동
-- 비인증 사용자는 모든 페이지에서 로그인으로 리다이렉트
+```
+mixpedia/
+├── public/
+└── src/
+```
 
 ---
 
-### 2. 믹스 검색 (`/mix-search`)
+## src/
 
-미디어믹스 데이터를 다양한 조건으로 탐색하는 핵심 검색 페이지.
-
-**검색 조건**
-- 키워드 텍스트 검색 (파일명 기준)
-- 매체 멀티셀렉트 필터 (복수 선택)
-- 업종 멀티셀렉트 필터 (복수 선택)
-- 타겟 성별 필터 (전체 / 남성 / 여성)
-- 타겟 연령 범위 필터 (최솟값 / 최댓값)
-
-**결과 테이블**
-- 검색 결과를 정렬 가능한 테이블로 표시
-- 페이지네이션 지원
-- 행 클릭 시 믹스 상세 페이지로 이동
-
-**믹스 상세**
-- 캠페인 기본 정보 (예산, 업종, 타겟 성별/연령, 원본 파일 링크)
-- 매체별 예산 비중 도넛 차트
-- 매체 단위 집행 내역 전체 테이블 (매체, 타겟팅 유형, 성별, 연령, 기간, 예산, 노출, 클릭, 조회수)
-- 유사 미디어믹스 추천 카드 (벡터 유사도 기반 Top N)
-  - 카드 클릭 시 해당 믹스 상세로 이동 (무한 탐색 가능)
-- 데이터 수정 요청 기능 (담당자에게 코멘트 전송)
-
----
-
-### 3. 매체 인사이트 (`/media-insight`)
-
-개별 매체의 사용 현황과 조합 패턴을 분석하는 인사이트 페이지.
-
-**매체 목록 테이블**
-- 전체 매체 목록 표시 (매체명, 포함 믹스 수, 주요 사용 업종 Top 5)
-- 매체명 텍스트 검색 필터
-- 업종 드롭다운 필터
-- 행 클릭 시 매체 상세로 이동
-
-**매체 상세**
-
-_헤더 영역_
-- 업종 드롭다운 필터 (전체 + 해당 매체 사용 업종 목록, 기본값: 사용 빈도 TOP1 업종)
-- 업종 필터 기준 해당 매체 포함 믹스 수 표시
-- 업종 변경 시 하위 모든 데이터 실시간 갱신
-
-_인사이트 영역_
-- **주요 데모 타겟 순위**: 업종 필터 기준 해당 매체가 포함된 믹스에서 가장 많이 사용된 타겟 데모 Top 10 (바 차트)
-- **함께 사용된 매체 순위**: 동일 믹스에 함께 등장한 매체 Top 10 (바 차트)
-- **매체 동시 사용 네트워크**: 매체 간 동반 출현 관계를 네트워크 그래프로 시각화
-  - 노드 크기: 매체 등장 빈도 비례
-  - 노드 색상: 그래프 중심까지의 거리 기반 그라데이션 (중심 매체는 인디고 강조)
-  - 엣지 두께: 동반 출현 횟수 비례
-  - 최소 믹스 수 슬라이더로 표시 노드 수 조절 가능
-  - 줌/패닝 지원, PNG 저장 기능
-
-_이 매체가 포함된 믹스_
-- 업종 필터 기준 해당 매체가 포함된 믹스 카드 목록
-- 카드 클릭 시 믹스 상세 페이지로 이동
+```
+src/
+├── App.jsx               루트 컴포넌트 — Router 렌더링
+├── main.jsx              React 진입점 — Axios 인터셉터 초기화
+├── index.css             전역 CSS — 디자인 토큰(변수), 레이아웃, Sidebar, GridJS 공통 테마
+│
+├── config/
+│   ├── config.js         API 엔드포인트 상수 (endpoint)
+│   └── axiosSetup.js     Axios 기본 설정 — 토큰 인터셉터, 401 자동 로그아웃
+│
+├── routes/
+│   ├── Router.jsx        전체 라우팅 정의 (BrowserRouter + Route 매핑)
+│   └── PrivateRoute.jsx  인증 가드 — localStorage token 검증, 미인증 시 /login 리디렉트
+│
+├── layouts/
+│   ├── MainLayout.jsx    메인 레이아웃 — Sidebar + <Outlet>, BookmarkProvider 감싸기
+│   └── SidebarLayout.jsx 사이드바 UI — 메뉴 그룹, 로그아웃, 활성 경로 하이라이트
+│
+├── context/
+│   └── BookmarkContext.jsx 전역 북마크 상태 — 추가/삭제, 서버 동기화, useBookmark 훅 제공
+│
+├── utils/                 ★ 공통 유틸 (여러 페이지에서 import)
+│   ├── notify.js          Notyf 토스트 인스턴스 — notify.success / notify.error
+│   └── mixUtils.js        공통 포맷 함수 — toArr, fmtBudget, GENDER_LABEL
+│
+├── hooks/                 ★ 공통 커스텀 훅
+│   └── useAuthToken.js    인증 토큰 헬퍼 — getToken(), authHeader() 반환
+│
+├── components/            ★ 공통 UI 컴포넌트 (여러 페이지에서 재사용 가능)
+│   └── MultiSelect.jsx    다중선택 드롭다운 — 검색, 태그 표시, 외부클릭 닫기
+│
+└── pages/                 페이지 단위 기능 모듈 (feature-folder 패턴)
+    ├── Login/
+    ├── MixSearch/
+    ├── MediaInsight/
+    └── MarketingMixModel/
+```
 
 ---
 
-## 공통
+## pages/Login/
 
-- JWT 기반 인증 (axios 인터셉터로 자동 토큰 첨부)
-- 인증 만료 시 자동 로그인 페이지 리다이렉트
-- 다크 사이드바 + 라이트 콘텐츠 레이아웃
-- 반응형 없음 (데스크탑 전용)
+```
+Login/
+├── LoginPage.jsx   로그인 폼 — 아이디/비밀번호 입력, 토큰 저장, 메인 리디렉트
+└── styles.css      로그인 페이지 전용 스타일
+```
+
+---
+
+## pages/MixSearch/
+
+미디어믹스 검색 및 북마크 기능
+
+```
+MixSearch/
+├── index.jsx                진입점 — MixSearchPage 재export
+├── MixSearchPage.jsx        메인 페이지 — 필터 + 테이블 + 상세 조회 조합
+├── styles.css               MixSearch 전용 스타일
+│
+├── hooks/
+│   └── useMixSearch.js      검색 로직 훅 — 필터 상태, API 호출, 옵션 로드
+│
+├── components/
+│   ├── SearchPanel.jsx       필터 UI — 매체, 업종, 성별, 연령 등 입력
+│   ├── MixTable.jsx          GridJS 결과 테이블 — 북마크 토글, 행 선택
+│   └── detail/
+│       ├── MixDetail.jsx     믹스 상세 — 예산 차트, 유사 믹스, 파일 링크
+│       ├── DonutChart.jsx    매체별 예산 도넛차트 (ECharts)
+│       ├── EditModal.jsx     수정 요청 모달
+│       └── MixMicroGrid.jsx  상세 집행내역 GridJS 테이블
+│
+└── MyBookmarks/
+    ├── index.jsx             북마크 목록 페이지 — CRUD, 선택, 분석 진입
+    └── BookmarkInsights.jsx  선택된 북마크 비교 분석 페이지
+```
+
+---
+
+## pages/MediaInsight/
+
+매체별 인사이트 조회
+
+```
+MediaInsight/
+├── index.jsx                진입점 — MediaInsightPage 재export
+├── MediaInsightPage.jsx     메인 페이지 — 매체 목록 + 상세 조회
+├── styles.css               MediaInsight 전용 스타일
+└── components/
+    ├── MediaTable.jsx        매체 목록 테이블
+    ├── MediaDetail.jsx       매체 상세 — 업종/프로그램 분포, 혼합 조회
+    └── MediaNetwork.jsx      매체 관계 네트워크 시각화
+```
+
+---
+
+## pages/MarketingMixModel/
+
+MMM(Marketing Mix Model) 생성·조회·분석
+
+```
+MarketingMixModel/
+├── MmmCreatePage.jsx         5단계 모델 생성 위저드
+├── MmmMyModelsPage.jsx       모델 목록 조회 + 삭제
+├── MmmDetailPage.jsx         모델 상세 — 3탭 (Overview / Ad Effect / Optimize)
+├── styles.css                MMM 전용 스타일 (mmm-card, mmm-badge 등)
+├── mmmUtils.js               MMM 내부 헬퍼 — 모델 ID 생성, 단계 상수, JSON 파싱
+│
+├── steps/                    위저드 단계별 컴포넌트
+│   ├── Step00Define.jsx      1단계: 모델명 입력
+│   ├── Step01Upload.jsx      2단계: CSV 업로드
+│   ├── Step02Variables.jsx   3단계: 시간/KPI/매체 변수 매핑
+│   ├── Step03Settings.jsx    4단계: ROI·커버리지·최적빈도 설정
+│   └── Step04Complete.jsx    5단계: 완료 안내
+│
+├── components/               MMM 전용 공통 컴포넌트
+│   ├── StepIndicator.jsx     진행 단계 표시바
+│   ├── Alerts.jsx            경고/에러 배너
+│   ├── MmmFilterCard.jsx     모델 조회 필터 (날짜, 모델명, ID)
+│   ├── MmmModelsGrid.jsx     모델 목록 GridJS 테이블 (상태 뱃지, 삭제 버튼)
+│   └── DeleteConfirmModal.jsx 모델 삭제 확인 모달 — 되돌릴 수 없음 경고 포함
+│
+└── detail/                   상세 탭별 차트·테이블 컴포넌트
+    ├── MmmDetailHeader.jsx   모델 메타 정보 헤더 (기간, KPI, 매체 변수 카드)
+    ├── TabOverview.jsx       Overview 탭 — 모델 성능, 기여 KPI, ROI 시각화
+    ├── TabAdEffect.jsx       Ad Effect 탭 — Carry Over(Adstock) / Saturation 차트
+    ├── TabOptimize.jsx       Optimize 탭 — 반응 곡선, 예산 배분 최적화
+    └── chartUtils.js         차트 공통 — MIXPEDIA 팔레트, hexToRgba, TIMESEQ_LABEL
+```
+
+---
+
+## 설계 원칙
+
+| 위치 | 기준 |
+|------|------|
+| `src/utils/` | 2개 이상의 feature에서 사용하는 순수 함수 |
+| `src/hooks/` | 2개 이상의 feature에서 사용하는 커스텀 훅 |
+| `src/components/` | 2개 이상의 feature에서 사용하는 UI 컴포넌트 |
+| `pages/<Feature>/utils/` | 해당 feature 전용 유틸 함수 |
+| `pages/<Feature>/hooks/` | 해당 feature 전용 커스텀 훅 |
+| `pages/<Feature>/components/` | 해당 feature 전용 UI 컴포넌트 |

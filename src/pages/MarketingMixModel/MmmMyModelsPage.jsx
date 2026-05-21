@@ -3,6 +3,7 @@ import axios from "axios";
 import { endpoint } from "../../config/config";
 import MmmFilterCard from "./components/MmmFilterCard";
 import MmmModelsGrid from "./components/MmmModelsGrid";
+import DeleteConfirmModal from "./components/DeleteConfirmModal";
 import "./styles.css";
 
 function initFilters() {
@@ -24,6 +25,8 @@ export default function MmmMyModelsPage() {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null); // modelId | null
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const setFilter = (key, val) =>
     setFilters((prev) => ({ ...prev, [key]: val }));
@@ -54,10 +57,38 @@ export default function MmmMyModelsPage() {
     }
   };
 
+  const handleDelete = (modelId) => setDeleteTarget(modelId);
+
+  const handleDeleteConfirm = async () => {
+    setDeleteLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`${endpoint}/mmm/delete/`, {
+        params: { model_id: deleteTarget },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDeleteTarget(null);
+      handleQuery();
+    } catch {
+      setError("모델 삭제에 실패했습니다.");
+      setDeleteTarget(null);
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   useEffect(() => { handleQuery(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="mmm-page">
+      {deleteTarget && (
+        <DeleteConfirmModal
+          modelId={deleteTarget}
+          loading={deleteLoading}
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
       <div className="page-header">
         <h1 className="page-title">모델 확인</h1>
         <p className="page-desc">
@@ -93,7 +124,7 @@ export default function MmmMyModelsPage() {
             {(results ?? []).length.toLocaleString()}건
           </span>
         </div>
-        <MmmModelsGrid results={results} />
+        <MmmModelsGrid results={results} onDeleteClick={handleDelete} />
       </div>
     </div>
   );

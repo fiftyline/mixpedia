@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import { endpoint } from "../../../../config/config";
 import { useBookmark } from "../../../../context/BookmarkContext";
-import { toArr, fmtBudget, GENDER_LABEL } from "../../utils/mixUtils";
+import { toArr, fmtBudget, GENDER_LABEL } from "../../../../utils/mixUtils";
 import DonutChart from "./DonutChart";
 import EditModal from "./EditModal";
 import MixMicroGrid from "./MixMicroGrid";

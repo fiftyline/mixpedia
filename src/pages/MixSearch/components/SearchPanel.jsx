@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import MultiSelect from "./MultiSelect";
+import MultiSelect from "../../../components/MultiSelect";
 
 const GENDER_OPTIONS = [
   { val: "P", label: "전체" },

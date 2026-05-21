@@ -4,8 +4,8 @@ import "gridjs/dist/theme/mermaid.min.css";
 
 const BADGE_MAP = {
   progress_complete: ["complete", "완료"],
-  progress_in:       ["progress", "분석 중"],
-  progress_error:    ["error",    "오류"],
+  progress_in: ["progress", "분석 중"],
+  progress_error: ["error", "오류"],
 };
 
 function badgeHtml(status) {
@@ -27,7 +27,9 @@ const COLUMNS = [
     formatter: (cell, row) => {
       const status = row.cells[5]?.data;
       if (status === "progress_complete") {
-        return html(`<a class="mmm-grid-id-link" href="/mmm/my-mmm/${cell}">${cell}</a>`);
+        return html(
+          `<a class="mmm-grid-id-link" href="/mmm/my-mmm/${cell}">${cell}</a>`,
+        );
       }
       return html(`<span class="mmm-grid-id">${cell}</span>`);
     },
@@ -37,13 +39,15 @@ const COLUMNS = [
     name: "모델 생성 시간",
     id: "model_dttm",
     width: "160px",
-    formatter: (cell) => html(`<span class="mmm-grid-dttm">${fmtDttm(cell)}</span>`),
+    formatter: (cell) =>
+      html(`<span class="mmm-grid-dttm">${fmtDttm(cell)}</span>`),
   },
   {
     name: "상태 갱신 시간",
     id: "status_dttm",
     width: "160px",
-    formatter: (cell) => html(`<span class="mmm-grid-dttm">${fmtDttm(cell)}</span>`),
+    formatter: (cell) =>
+      html(`<span class="mmm-grid-dttm">${fmtDttm(cell)}</span>`),
   },
   {
     name: "진행 상태",
@@ -60,16 +64,35 @@ const COLUMNS = [
       const status = row.cells[5]?.data;
       const modelId = row.cells[1]?.data;
       if (status === "progress_complete") {
-        return html(`<a class="mmm-report-btn" href="/mmm/my-mmm/${modelId}">결과 보고서 →</a>`);
+        return html(
+          `<a class="mmm-report-btn" href="/mmm/my-mmm/${modelId}">결과 보고서</a>`,
+        );
       }
       return html(`<span class="mmm-grid-empty">—</span>`);
     },
   },
+  {
+    name: "삭제",
+    id: "_delete",
+    width: "100px",
+    sort: false,
+    formatter: (_, row) => {
+      const modelId = row.cells[1]?.data;
+      return html(
+        `<button class="mmm-delete-btn" data-model-id="${modelId}">🗑 삭제</button>`,
+      );
+    },
+  },
 ];
 
-export default function MmmModelsGrid({ results }) {
+export default function MmmModelsGrid({ results, onDeleteClick }) {
   const containerRef = useRef(null);
   const gridRef = useRef(null);
+  const deleteCallbackRef = useRef(onDeleteClick);
+
+  useEffect(() => {
+    deleteCallbackRef.current = onDeleteClick;
+  }, [onDeleteClick]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -81,7 +104,12 @@ export default function MmmModelsGrid({ results }) {
       width: "100%",
       language: {
         search: { placeholder: "검색..." },
-        pagination: { previous: "이전", next: "다음", showing: "", results: () => "건" },
+        pagination: {
+          previous: "이전",
+          next: "다음",
+          showing: "",
+          results: () => "건",
+        },
         noRecordsFound: "조회된 모델이 없습니다.",
         error: "오류가 발생했습니다.",
       },
@@ -89,7 +117,15 @@ export default function MmmModelsGrid({ results }) {
 
     gridRef.current.render(containerRef.current);
 
+    const handleClick = (e) => {
+      const btn = e.target.closest("[data-model-id]");
+      if (btn) deleteCallbackRef.current?.(btn.dataset.modelId);
+    };
+    containerRef.current.addEventListener("click", handleClick);
+    const el = containerRef.current;
+
     return () => {
+      el.removeEventListener("click", handleClick);
       gridRef.current?.destroy();
       gridRef.current = null;
     };
@@ -98,16 +134,17 @@ export default function MmmModelsGrid({ results }) {
   useEffect(() => {
     if (!gridRef.current || results === null) return;
     const rows = results.map((r) => ({
-      input_username:  r.input_username  ?? "-",
-      model_id:        r.model_id        ?? "-",
+      input_username: r.input_username ?? "-",
+      model_id: r.model_id ?? "-",
       input_modelname: r.input_modelname ?? "-",
-      model_dttm:      r.model_dttm      ?? "",
-      status_dttm:     r.status_dttm     ?? "",
-      status:          r.status          ?? "",
-      _report:         r.model_id        ?? "",
+      model_dttm: r.model_dttm ?? "",
+      status_dttm: r.status_dttm ?? "",
+      status: r.status ?? "",
+      _report: r.model_id ?? "",
+      _delete: r.model_id ?? "",
     }));
     gridRef.current.updateConfig({ data: rows }).forceRender();
   }, [results]);
 
-  return <div ref={containerRef} className="mmm-gridjs-wrap" />;
+  return <div ref={containerRef} className="gridjs-wrap" />;
 }

@@ -3,7 +3,7 @@ import { ChevronLeft, BookmarkCheck } from "lucide-react";
 import axios from "axios";
 import { endpoint } from "../../../config/config";
 import { useBookmark } from "../../../context/BookmarkContext";
-import { toArr, fmtBudget } from "../../MixSearch/utils/mixUtils";
+import { toArr, fmtBudget } from "../../../utils/mixUtils";
 import MediaNetwork from "./MediaNetwork";
 
 function RankBar({ label, count, max, type }) {

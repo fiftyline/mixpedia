@@ -2,17 +2,28 @@ import { useEffect, useRef } from "react";
 import { Grid, html } from "gridjs";
 import "gridjs/dist/theme/mermaid.min.css";
 import ReactECharts from "echarts-for-react";
-import { ROMA } from "./chartUtils";
+import { MIXPEDIA } from "./chartUtils";
+
+const FONT_BODY = "DM Sans, sans-serif";
 
 function buildKpiOption(bytime) {
   const f = (m) => bytime.filter((d) => d.metric === m);
   const times = f("kpi_pred").map((d) => d.time_index);
   return {
-    color: ROMA,
+    color: ["#6366f1", "#1a1d2e"],
+    textStyle: { fontFamily: FONT_BODY },
     tooltip: { trigger: "axis", axisPointer: { type: "line" } },
-    legend: { data: ["실제 KPI", "MMM 예측 KPI"], top: "top" },
+    legend: {
+      data: ["실제 KPI", "MMM 예측 KPI"],
+      top: "top",
+      textStyle: { fontFamily: FONT_BODY },
+    },
     grid: { left: 80, right: 20, top: 40, bottom: 20, containLabel: true },
-    xAxis: { type: "category", data: times },
+    xAxis: {
+      type: "category",
+      data: times,
+      axisLabel: { fontFamily: FONT_BODY },
+    },
     yAxis: { type: "value", min: 0 },
     series: [
       {
@@ -20,12 +31,16 @@ function buildKpiOption(bytime) {
         type: "line",
         data: f("kpi_pred").map((d) => d.value),
         smooth: true,
+        itemStyle: { color: "#6366f1" },
+        lineStyle: { color: "#6366f1", type: "dashed", width: 2 },
       },
       {
         name: "실제 KPI",
         type: "line",
         data: f("kpi_true").map((d) => d.value),
         smooth: true,
+        itemStyle: { color: "#f59e0b" },
+        lineStyle: { color: "#f59e0b", width: 2 },
       },
       {
         name: "신뢰구간",
@@ -33,7 +48,7 @@ function buildKpiOption(bytime) {
         data: f("kpi_pred_ucl").map((d) => d.value),
         lineStyle: { opacity: 0 },
         symbol: "none",
-        areaStyle: { origin: "start", color: "rgba(128,128,128,0.3)" },
+        areaStyle: { origin: "start", color: "rgba(99,102,241,0.12)" },
         tooltip: { show: false },
       },
       {
@@ -54,14 +69,36 @@ function buildStackOption(bytime, optionset) {
     ...(optionset?.media_alias ?? []),
     ...(optionset?.media_rf_alias ?? []),
   ];
-  const baseline = bytime.filter((d) => d.metric === "incremental_kpi_BASELINE");
+  const baseline = bytime.filter(
+    (d) => d.metric === "incremental_kpi_BASELINE",
+  );
   const times = baseline.map((d) => d.time_index);
   return {
-    color: ROMA,
+    color: MIXPEDIA,
+    textStyle: { fontFamily: FONT_BODY },
+    title: {
+      text: "매체별 기여 KPI (시간)",
+      textStyle: {
+        fontFamily: FONT_BODY,
+        fontSize: 12,
+        fontWeight: 600,
+        color: "#4b5070",
+      },
+      left: 0,
+      top: 0,
+    },
     tooltip: { trigger: "axis", axisPointer: { type: "line" } },
-    legend: { data: ["비마케팅 요인", ...aliases], top: "top" },
-    grid: { left: 80, right: 20, top: 40, bottom: 20, containLabel: true },
-    xAxis: { type: "category", data: times },
+    legend: {
+      data: ["비마케팅 요인", ...aliases],
+      bottom: 0,
+      textStyle: { fontFamily: FONT_BODY },
+    },
+    grid: { left: 80, right: 20, top: 40, bottom: 60, containLabel: true },
+    xAxis: {
+      type: "category",
+      data: times,
+      axisLabel: { fontFamily: FONT_BODY },
+    },
     yAxis: { type: "value", min: 0 },
     series: [
       {
@@ -103,7 +140,7 @@ function buildWaterfallOption(bytime, optionset) {
 
   const assists = [0];
   const values = [baseSum];
-  const colors = ["#3949AB"];
+  const colors = ["#94a3b8"];
   let cumulative = baseSum;
 
   for (const m of aliases) {
@@ -112,11 +149,12 @@ function buildWaterfallOption(bytime, optionset) {
       .reduce((s, d) => s + d.value, 0);
     assists.push(cumulative);
     values.push(sum);
-    colors.push("#125001");
+    colors.push("#6366f1");
     cumulative += sum;
   }
 
   return {
+    textStyle: { fontFamily: FONT_BODY },
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
@@ -130,7 +168,7 @@ function buildWaterfallOption(bytime, optionset) {
     xAxis: {
       type: "category",
       data: ["비마케팅 요인", ...aliases],
-      axisLabel: { rotate: 45 },
+      axisLabel: { rotate: 45, fontFamily: FONT_BODY },
     },
     yAxis: { type: "value", min: 0 },
     series: [
@@ -161,18 +199,25 @@ function buildWaterfallOption(bytime, optionset) {
 function buildRoiBarOption(summary) {
   const data = summary.slice(0, -1);
   return {
+    textStyle: { fontFamily: FONT_BODY },
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
       formatter: (params) =>
-        params.map((p) => `${p.seriesName}: ${(p.value * 100).toFixed(2)}%`).join("<br>"),
+        params
+          .map((p) => `${p.seriesName}: ${(p.value * 100).toFixed(2)}%`)
+          .join("<br>"),
     },
-    legend: { data: ["집행 예산 비율(%)", "매체 기여 KPI 비율(%)"], top: "top" },
+    legend: {
+      data: ["집행 예산 비율(%)", "매체 기여 KPI 비율(%)"],
+      top: "top",
+      textStyle: { fontFamily: FONT_BODY },
+    },
     grid: { left: 80, right: 20, top: 40, bottom: 40, containLabel: true },
     xAxis: {
       type: "category",
       data: data.map((d) => d.media_alias),
-      axisLabel: { rotate: 45 },
+      axisLabel: { rotate: 45, fontFamily: FONT_BODY },
     },
     yAxis: {
       type: "value",
@@ -185,24 +230,24 @@ function buildRoiBarOption(summary) {
         name: "집행 예산 비율(%)",
         type: "bar",
         data: data.map((d) => d.cost_ratio),
-        itemStyle: { color: "#3949AB" },
+        itemStyle: { color: "#94a3b8" },
         label: {
           show: true,
           position: "top",
           formatter: (v) => `${(v.value * 100).toFixed(2)}%`,
-          color: "#3949AB",
+          color: "#94a3b8",
         },
       },
       {
         name: "매체 기여 KPI 비율(%)",
         type: "bar",
         data: data.map((d) => d.incremental_kpi_ratio),
-        itemStyle: { color: "#6C8AE6" },
+        itemStyle: { color: "#6366f1" },
         label: {
           show: true,
           position: "top",
           formatter: (v) => `${(v.value * 100).toFixed(2)}%`,
-          color: "#6C8AE6",
+          color: "#6366f1",
         },
       },
     ],
@@ -212,7 +257,11 @@ function buildRoiBarOption(summary) {
 function buildRoiCiOption(summary) {
   const data = summary.slice(0, -1);
   const maxUcl = Math.max(...data.map((d) => d.roi_ucl));
+  const minLcl = Math.min(...data.map((d) => d.roi_lcl));
+  const yMin = minLcl < 0 ? minLcl * 1.3 : 0;
+  const yMax = maxUcl > 0 ? maxUcl * 1.25 : 0.01;
   return {
+    textStyle: { fontFamily: FONT_BODY },
     tooltip: {
       trigger: "axis",
       formatter: (params) => {
@@ -228,25 +277,28 @@ function buildRoiCiOption(summary) {
     xAxis: {
       type: "category",
       data: data.map((d) => d.media_alias),
-      axisLabel: { rotate: 45 },
+      axisLabel: { rotate: 45, fontFamily: FONT_BODY },
     },
     yAxis: {
       type: "value",
-      min: 0,
-      max: maxUcl * 1.1,
-      axisLabel: { formatter: (v) => `${(v * 100).toFixed(2)}%` },
+      min: yMin,
+      max: yMax,
+      axisLabel: {
+        formatter: (v) => `${(v * 100).toFixed(1)}%`,
+        fontFamily: FONT_BODY,
+      },
     },
     series: [
       {
         name: "ROI",
         type: "bar",
         data: data.map((d) => d.roi),
-        itemStyle: { color: "#6C8AE6" },
+        itemStyle: { color: "#6366f1" },
         label: {
           show: true,
           position: "top",
           formatter: (v) => `${(v.value * 100).toFixed(1)}%`,
-          color: "#6C8AE6",
+          color: "#6366f1",
         },
       },
       {
@@ -265,21 +317,46 @@ function buildRoiCiOption(summary) {
           return {
             type: "group",
             children: [
-              { type: "line", shape: { x1: x, y1: yLow, x2: x, y2: yHigh }, style: { stroke: "black", lineWidth: 1.5 } },
-              { type: "line", shape: { x1: x - lw, y1: yHigh, x2: x + lw, y2: yHigh }, style: { stroke: "black", lineWidth: 1.5 } },
-              { type: "line", shape: { x1: x - lw, y1: yLow, x2: x + lw, y2: yLow }, style: { stroke: "black", lineWidth: 1.5 } },
+              {
+                type: "line",
+                shape: { x1: x, y1: yLow, x2: x, y2: yHigh },
+                style: { stroke: "black", lineWidth: 1.5 },
+              },
+              {
+                type: "line",
+                shape: { x1: x - lw, y1: yHigh, x2: x + lw, y2: yHigh },
+                style: { stroke: "black", lineWidth: 1.5 },
+              },
+              {
+                type: "line",
+                shape: { x1: x - lw, y1: yLow, x2: x + lw, y2: yLow },
+                style: { stroke: "black", lineWidth: 1.5 },
+              },
             ],
           };
         },
         encode: { x: 0, y: 1 },
-        data: data.map((d, idx) => [idx, d.roi, d.roi_ucl - d.roi, d.roi - d.roi_lcl]),
+        data: data.map((d, idx) => [
+          idx,
+          d.roi,
+          d.roi_ucl - d.roi,
+          d.roi - d.roi_lcl,
+        ]),
       },
     ],
   };
 }
 
+function r2Level(r2) {
+  if (r2 == null) return "—";
+  if (r2 >= 80) return "높은";
+  if (r2 >= 60) return "양호한";
+  return "낮은";
+}
+
 export default function TabOverview({ data }) {
-  const { attributionByTime, attributionSummary, optionset, overviewCmt } = data;
+  const { attributionByTime, attributionSummary, optionset, overviewCmt } =
+    data;
   const cmt = overviewCmt?.[0] ?? {};
   const tableRef = useRef(null);
   const gridRef = useRef(null);
@@ -296,45 +373,55 @@ export default function TabOverview({ data }) {
         name: "집행 비용",
         id: "cost",
         formatter: (v) =>
-          html(`<span style="font-family:var(--font-data);font-size:11px">${
-            typeof v === "number"
-              ? v.toLocaleString(undefined, { maximumFractionDigits: 0 })
-              : (v ?? "-")
-          }</span>`),
+          html(
+            `<span style="font-family:var(--font-body);font-size:13px">${
+              typeof v === "number"
+                ? v.toLocaleString(undefined, { maximumFractionDigits: 0 })
+                : (v ?? "-")
+            }</span>`,
+          ),
       },
       {
         name: "집행 비율(%)",
         id: "cost_ratio",
         formatter: (v) =>
-          html(`<span style="font-family:var(--font-data);font-size:11px">${
-            typeof v === "number" ? `${(v * 100).toFixed(2)}%` : (v ?? "-")
-          }</span>`),
+          html(
+            `<span style="font-family:var(--font-body);font-size:13px">${
+              typeof v === "number" ? `${(v * 100).toFixed(2)}%` : (v ?? "-")
+            }</span>`,
+          ),
       },
       {
         name: "매체 기여 KPI",
         id: "incremental_kpi",
         formatter: (v) =>
-          html(`<span style="font-family:var(--font-data);font-size:11px">${
-            typeof v === "number"
-              ? v.toLocaleString(undefined, { maximumFractionDigits: 0 })
-              : (v ?? "-")
-          }</span>`),
+          html(
+            `<span style="font-family:var(--font-body);font-size:13px">${
+              typeof v === "number"
+                ? v.toLocaleString(undefined, { maximumFractionDigits: 0 })
+                : (v ?? "-")
+            }</span>`,
+          ),
       },
       {
         name: "매체 기여 KPI 비율(%)",
         id: "incremental_kpi_ratio",
         formatter: (v) =>
-          html(`<span style="font-family:var(--font-data);font-size:11px">${
-            typeof v === "number" ? `${(v * 100).toFixed(2)}%` : (v ?? "-")
-          }</span>`),
+          html(
+            `<span style="font-family:var(--font-body);font-size:13px">${
+              typeof v === "number" ? `${(v * 100).toFixed(2)}%` : (v ?? "-")
+            }</span>`,
+          ),
       },
       {
         name: "ROI(%)",
         id: "roi",
         formatter: (v) =>
-          html(`<span style="font-family:var(--font-data);font-size:11px">${
-            typeof v === "number" ? `${(v * 100).toFixed(2)}%` : (v ?? "-")
-          }</span>`),
+          html(
+            `<span style="font-family:var(--font-body);font-size:13px">${
+              typeof v === "number" ? `${(v * 100).toFixed(2)}%` : (v ?? "-")
+            }</span>`,
+          ),
       },
     ];
 
@@ -360,7 +447,6 @@ export default function TabOverview({ data }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-
       {/* ── Section 1: 모델 성능 ── */}
       {hasBytime && (
         <div className="mmm-card">
@@ -376,16 +462,26 @@ export default function TabOverview({ data }) {
                 <tbody>
                   <tr>
                     <td>{cmt.model_r2 != null ? `${cmt.model_r2}%` : "—"}</td>
-                    <td>{cmt.model_mape != null ? `${cmt.model_mape}%` : "—"}</td>
+                    <td>
+                      {cmt.model_mape != null ? `${cmt.model_mape}%` : "—"}
+                    </td>
                   </tr>
                 </tbody>
               </table>
-              {cmt.overview_comment && (
-                <p
-                  className="mmm-perf-desc"
-                  dangerouslySetInnerHTML={{ __html: cmt.overview_comment }}
-                />
-              )}
+              <p className="mmm-perf-desc">
+                MMM모델의 적합도(R² Score)는{" "}
+                <strong>
+                  {cmt.model_r2 != null ? `${cmt.model_r2}%` : "—"}
+                </strong>
+                , 정확도(MAPE)는{" "}
+                <strong>
+                  {cmt.model_mape != null ? `${cmt.model_mape}%` : "—"}
+                </strong>
+                로써, <br />
+                <strong>{cmt.kpi_vars ?? "KPI"}</strong>의 변동에{" "}
+                <strong>{r2Level(cmt.model_r2)}</strong> 설명력을 나타내고
+                있습니다.
+              </p>
             </div>
             <ReactECharts
               option={buildKpiOption(attributionByTime)}
@@ -400,7 +496,7 @@ export default function TabOverview({ data }) {
       {hasSummary && (
         <div className="mmm-card">
           <div className="mmm-card-title">Summary</div>
-          <div className="mmm-gridjs-wrap" ref={tableRef} />
+          <div className="gridjs-wrap mmm-summary-grid" ref={tableRef} />
         </div>
       )}
 
@@ -409,21 +505,16 @@ export default function TabOverview({ data }) {
         <div className="mmm-card">
           <div className="mmm-card-title">Media</div>
           <div className="mmm-two-col-charts">
-            <div>
-              <div className="mmm-chart-sub-label">매체별 기여 KPI (시간)</div>
-              <ReactECharts
-                option={buildStackOption(attributionByTime, optionset)}
-                style={{ height: 340 }}
-                opts={{ renderer: "svg" }}
-              />
-            </div>
-            <div>
-              <ReactECharts
-                option={buildWaterfallOption(attributionByTime, optionset)}
-                style={{ height: 340 }}
-                opts={{ renderer: "svg" }}
-              />
-            </div>
+            <ReactECharts
+              option={buildStackOption(attributionByTime, optionset)}
+              style={{ height: 360 }}
+              opts={{ renderer: "svg" }}
+            />
+            <ReactECharts
+              option={buildWaterfallOption(attributionByTime, optionset)}
+              style={{ height: 360 }}
+              opts={{ renderer: "svg" }}
+            />
           </div>
         </div>
       )}
@@ -447,7 +538,7 @@ export default function TabOverview({ data }) {
           </div>
         </div>
       )}
-
+      <br />
     </div>
   );
 }
