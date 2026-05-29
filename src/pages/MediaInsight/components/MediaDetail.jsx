@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { ChevronLeft, BookmarkCheck } from "lucide-react";
 import axios from "axios";
 import { endpoint } from "../../../config/config";
@@ -35,28 +35,10 @@ function microReducer(state, action) {
   }
 }
 
-function extractInds(macroData) {
-  const count = {};
-  (macroData ?? []).forEach((row) => {
-    const inds = Array.isArray(row.ind_depth1)
-      ? row.ind_depth1
-      : row.ind_depth1
-        ? [row.ind_depth1]
-        : [];
-    inds.forEach((ind) => {
-      count[ind] = (count[ind] || 0) + 1;
-    });
-  });
-  return Object.entries(count)
-    .sort((a, b) => b[1] - a[1])
-    .map(([ind]) => ind);
-}
-
 export default function MediaDetail({ media, onBack, onSelectMix }) {
   const { bookmarkedIds } = useBookmark();
   const [availableInds, setAvailableInds] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState("");
-  const initializedRef = useRef(false);
 
   const [{ data: microData, loading, error }, dispatch] = useReducer(
     microReducer,
@@ -64,6 +46,15 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
   );
 
   useEffect(() => {
+    setSelectedIndustry("");
+    const inds = Array.isArray(media.top_inds)
+      ? media.top_inds.map((t) => t.industry).filter(Boolean)
+      : [];
+    setAvailableInds(inds);
+  }, [media.media]);
+
+  useEffect(() => {
+    let cancelled = false;
     dispatch({ type: "start" });
     axios
       .post(`${endpoint}/get_media_micro/`, {
@@ -71,20 +62,18 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
         industry: selectedIndustry || null,
       })
       .then((res) => {
+        if (cancelled) return;
         const payload = Array.isArray(res.data) ? res.data[0] : res.data;
         dispatch({ type: "success", payload });
-
-        if (!initializedRef.current && Array.isArray(payload?.macro_data)) {
-          const inds = extractInds(payload.macro_data);
-          initializedRef.current = true;
-          setAvailableInds(inds);
-          if (inds.length > 0) setSelectedIndustry(inds[0]);
-        }
       })
       .catch((err) => {
+        if (cancelled) return;
         console.error("[get_media_micro] 오류:", err);
         dispatch({ type: "error", payload: "데이터를 불러오지 못했습니다." });
       });
+    return () => {
+      cancelled = true;
+    };
   }, [media.media, selectedIndustry]);
 
   const targets = Array.isArray(microData?.target_demo_cnt)
@@ -252,7 +241,10 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
                         </span>
                       )}
                       <div className="similar-card-name">
-                        {item.file_path || item.file_name || item.file_id || "-"}
+                        {item.file_path ||
+                          item.file_name ||
+                          item.file_id ||
+                          "-"}
                       </div>
                       <div className="similar-card-tags">
                         {toArr(item.medias).map((m) => (
