@@ -77,7 +77,9 @@
 /* ── Card ── */
 .mmm-card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   padding: 24px 28px;
 }
 
@@ -88,7 +90,7 @@
   color: var(--text);
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* ── Form ── */
@@ -110,6 +112,7 @@
 .mmm-input {
   background: var(--bg);
   border: 1px solid var(--border);
+  border-radius: 8px;
   color: var(--text);
   padding: 8px 12px;
   font-size: 0.875rem;
@@ -117,16 +120,19 @@
   width: 100%;
   max-width: 440px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s ease;
 }
 
 .mmm-input:focus {
   border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .mmm-select {
   background: var(--bg);
   border: 1px solid var(--border);
+  border-radius: 8px;
   color: var(--text);
   padding: 7px 10px;
   font-size: 0.85rem;
@@ -134,25 +140,32 @@
   outline: none;
   cursor: pointer;
   min-width: 110px;
+  transition: border-color 0.15s, box-shadow 0.15s ease;
 }
 
 .mmm-select:focus {
   border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .mmm-number-input {
   background: var(--bg);
   border: 1px solid var(--border);
+  border-radius: 8px;
   color: var(--text);
   padding: 7px 10px;
   font-size: 0.9rem;
   font-family: var(--font-body);
   width: 120px;
   outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s ease;
 }
 
 .mmm-number-input:focus {
   border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 /* ── Radio Group ── */
@@ -232,8 +245,10 @@
 }
 
 .mmm-var-card {
-  border: 1px solid var(--border);
-  background: var(--bg);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
@@ -280,14 +295,20 @@
   color: var(--text-secondary);
   background: var(--surface);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
   margin-left: -1px;
   user-select: none;
 }
 
 .mmm-toggle-btn:first-child {
+  border-radius: 8px 0 0 8px;
   margin-left: 0;
 }
+
+.mmm-toggle-btn:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
 .mmm-toggle-btn:hover:not(.mmm-toggle-btn--active) {
   border-color: var(--accent);
   color: var(--text);
@@ -380,9 +401,11 @@
 }
 
 .mmm-example-box {
-  border: 1px solid var(--border);
+  border: 1px solid rgba(226, 232, 240, 0.4);
   border-left: 3px solid var(--accent);
-  background: var(--bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  background: var(--surface-raised);
   padding: 12px 16px;
   margin-bottom: 14px;
   font-size: 0.82rem;
@@ -408,9 +431,9 @@
 }
 
 .mmm-var-table th {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 7px 10px;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 10px 12px;
   text-align: center;
   font-weight: 600;
   color: var(--text-secondary);
@@ -420,13 +443,17 @@
 }
 
 .mmm-var-table td {
-  border: 1px solid var(--border);
-  padding: 7px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 10px 12px;
   vertical-align: middle;
 }
 
+.mmm-var-table tr:nth-child(even) td {
+  background-color: var(--bg);
+}
+
 .mmm-var-table .mmm-td-label {
-  background: var(--surface);
+  background: transparent;
   font-weight: 600;
   color: var(--text-secondary);
   font-size: 0.8rem;
@@ -439,7 +466,7 @@
 }
 
 .mmm-var-table .mmm-td-input {
-  background: rgba(99, 102, 241, 0.03);
+  background: rgba(99, 102, 241, 0.01);
 }
 
 .mmm-var-table .mmm-select {
@@ -452,6 +479,9 @@
 /* ── Dynamic media rows table ── */
 .mmm-media-wrap {
   overflow-x: auto;
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .mmm-media-table {
@@ -462,9 +492,9 @@
 }
 
 .mmm-media-table th {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 7px 8px;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 10px 12px;
   text-align: center;
   font-weight: 600;
   color: var(--text-secondary);
@@ -475,10 +505,14 @@
 }
 
 .mmm-media-table td {
-  border: 1px solid var(--border);
-  padding: 4px 5px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 10px;
   vertical-align: middle;
-  background: rgba(99, 102, 241, 0.025);
+  background: var(--surface);
+}
+
+.mmm-media-table tr:nth-child(even) td {
+  background-color: var(--bg);
 }
 
 .mmm-media-table .mmm-input,
@@ -538,9 +572,9 @@
 }
 
 .mmm-roi-table th {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 7px 16px;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 10px 16px;
   font-weight: 600;
   color: var(--text-secondary);
   font-size: 0.75rem;
@@ -549,23 +583,28 @@
 }
 
 .mmm-roi-table td {
-  border: 1px solid var(--border);
-  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 12px;
   vertical-align: middle;
+  background: var(--surface);
+}
+
+.mmm-roi-table tr:nth-child(even) td {
+  background-color: var(--bg);
 }
 
 .mmm-roi-table .mmm-roi-alias {
   font-weight: 600;
   color: var(--text-secondary);
   font-size: 0.82rem;
-  background: var(--surface);
+  background: transparent;
   white-space: nowrap;
 }
 
 .mmm-roi-table .mmm-number-input {
   width: 100px;
   border: 1px solid transparent;
-  background: rgba(99, 102, 241, 0.03);
+  background: rgba(99, 102, 241, 0.01);
 }
 
 .mmm-roi-table .mmm-number-input:focus {
@@ -587,9 +626,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 14px;
+  padding: 10px 16px;
   font-size: 0.85rem;
-  border-left: 3px solid;
+  border-left: 4px solid;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
 }
 
 .mmm-alert--danger {
@@ -630,8 +671,10 @@
 
 /* ── Requirements box ── */
 .mmm-req-box {
-  border: 1px solid var(--border);
-  background: var(--bg);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
   padding: 14px 16px;
 }
 
@@ -871,7 +914,9 @@
   overflow-x: auto;
   max-height: 260px;
   overflow-y: auto;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   margin-top: 8px;
 }
 
@@ -883,9 +928,9 @@
 }
 
 .mmm-preview-table th {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 5px 10px;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 8px 12px;
   font-weight: 600;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -894,16 +939,23 @@
 }
 
 .mmm-preview-table td {
-  border: 1px solid var(--border);
-  padding: 4px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 6px 12px;
   white-space: nowrap;
   color: var(--text);
+  background: var(--surface);
+}
+
+.mmm-preview-table tr:nth-child(even) td {
+  background-color: var(--bg);
 }
 
 /* ── Sample data table ── */
 .mmm-sample-wrap {
   overflow-x: auto;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   margin: 10px 0;
   max-width: 100%;
 }
@@ -920,27 +972,33 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 5px 16px;
+  padding: 8px 16px;
   text-align: center;
-  border: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
+  background: var(--bg);
   white-space: nowrap;
 }
 
 .mmm-sample-table th {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 6px 16px;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 8px 16px;
   font-weight: 700;
   text-align: center;
   white-space: nowrap;
 }
 
 .mmm-sample-table td {
-  border: 1px solid var(--border);
-  padding: 5px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 16px;
   text-align: center;
   color: var(--text-secondary);
   white-space: nowrap;
+  background: var(--surface);
+}
+
+.mmm-sample-table tr:nth-child(even) td {
+  background-color: var(--bg);
 }
 
 /* ── Sub-section header ── */
@@ -964,8 +1022,10 @@
 }
 
 .mmm-lag-block {
-  border: 1px solid var(--border);
-  background: var(--bg);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
   padding: 14px 16px;
 }
 
@@ -1019,26 +1079,30 @@
   font-weight: 600;
   font-family: var(--font-body);
   border: 1px solid var(--border);
+  border-radius: 8px;
   background: var(--surface);
   color: var(--text);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .mmm-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
+  background: var(--bg);
 }
 
 .mmm-btn--primary {
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;
+  box-shadow: 0 2px 4px 0 rgba(99, 102, 241, 0.15);
 }
 
 .mmm-btn--primary:hover {
-  background: #5254cc;
-  border-color: #5254cc;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
   color: #fff;
 }
 .mmm-btn:disabled {
@@ -1060,10 +1124,12 @@
 
 .mmm-modal {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: none;
+  border-radius: var(--radius-lg);
   padding: 28px 32px;
   max-width: 520px;
   width: 90%;
+  box-shadow: var(--shadow-premium);
 }
 
 .mmm-modal-title {

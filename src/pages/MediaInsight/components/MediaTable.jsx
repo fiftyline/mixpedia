@@ -67,8 +67,6 @@ export default function MediaTable({ onSelect }) {
 
   const [allData, setAllData] = useState([]);
   const [filterMedia, setFilterMedia] = useState("");
-  const [filterInd, setFilterInd] = useState("");
-  const [availableInds, setAvailableInds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -126,16 +124,6 @@ export default function MediaTable({ onSelect }) {
         const data = Array.isArray(raw) ? raw : [];
         allDataRef.current = data;
         setAllData(data);
-
-        const indSet = new Set();
-        data.forEach((item) => {
-          if (Array.isArray(item.top_inds)) {
-            item.top_inds.forEach((ind) => {
-              if (ind.industry) indSet.add(ind.industry);
-            });
-          }
-        });
-        setAvailableInds([...indSet].sort());
         setLoading(false);
       })
       .catch((err) => {
@@ -150,13 +138,9 @@ export default function MediaTable({ onSelect }) {
       const mediaMatch =
         !filterMedia ||
         item.media.toLowerCase().includes(filterMedia.toLowerCase());
-      const indMatch =
-        !filterInd ||
-        (Array.isArray(item.top_inds) &&
-          item.top_inds.some((i) => i.industry === filterInd));
-      return mediaMatch && indMatch;
+      return mediaMatch;
     });
-  }, [allData, filterMedia, filterInd]);
+  }, [allData, filterMedia]);
 
   useEffect(() => {
     if (!gridRef.current) return;
@@ -165,7 +149,7 @@ export default function MediaTable({ onSelect }) {
       .forceRender();
   }, [filteredData]);
 
-  const isFiltered = filterMedia || filterInd;
+  const isFiltered = filterMedia;
 
   return (
     <div className="media-table-wrap">
@@ -189,27 +173,11 @@ export default function MediaTable({ onSelect }) {
             onChange={(e) => setFilterMedia(e.target.value)}
           />
         </div>
-        <div className="mtf-item">
-          <label className="mtf-label">업종</label>
-          <select
-            className="mtf-select"
-            value={filterInd}
-            onChange={(e) => setFilterInd(e.target.value)}
-          >
-            <option value="">전체</option>
-            {availableInds.map((ind) => (
-              <option key={ind} value={ind}>
-                {ind}
-              </option>
-            ))}
-          </select>
-        </div>
         {isFiltered && (
           <button
             className="mtf-reset"
             onClick={() => {
               setFilterMedia("");
-              setFilterInd("");
             }}
           >
             초기화

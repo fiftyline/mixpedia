@@ -1,5 +1,22 @@
-import { useEffect, useReducer, useRef, useState } from "react";
-import { ChevronLeft, BookmarkCheck } from "lucide-react";
+import { useEffect, useReducer, useState, useMemo } from "react";
+import {
+  CircleDollarSign,
+  BookmarkCheck,
+  BriefcaseBusiness,
+  Car,
+  ChevronLeft,
+  CircleDot,
+  GraduationCap,
+  HeartPulse,
+  Home,
+  MonitorSmartphone,
+  Plane,
+  Shirt,
+  ShoppingBag,
+  Sparkles,
+  Utensils,
+  Gamepad2
+} from "lucide-react";
 import axios from "axios";
 import { endpoint } from "../../../config/config";
 import { useBookmark } from "../../../context/BookmarkContext";
@@ -22,6 +39,30 @@ function RankBar({ label, count, max, type }) {
   );
 }
 
+const INDUSTRY_ICON_RULES = [
+  { keys: ["금융", "보험", "은행", "카드", "증권"], Icon: CircleDollarSign },
+  { keys: ["자동차", "차량", "모빌리티"], Icon: Car },
+  { keys: ["식품", "음료", "외식", "푸드", "주류"], Icon: Utensils },
+  { keys: ["의료", "건강", "제약", "헬스"], Icon: HeartPulse },
+  { keys: ["여행", "항공", "숙박", "레저"], Icon: Plane },
+  { keys: ["가전", "IT", "통신", "모바일", "전자"], Icon: MonitorSmartphone },
+  { keys: ["패션", "의류", "뷰티", "화장품"], Icon: Shirt },
+  { keys: ["유통", "쇼핑", "커머스", "마트"], Icon: ShoppingBag },
+  { keys: ["주거", "부동산", "건설", "인테리어"], Icon: Home },
+  { keys: ["교육", "학습", "학교"], Icon: GraduationCap },
+  { keys: ["게임"], Icon: Gamepad2 },
+  { keys: ["엔터", "문화", "게임", "콘텐츠"], Icon: Sparkles },
+  { keys: ["기업", "B2B", "서비스"], Icon: BriefcaseBusiness },
+];
+
+function getIndustryIcon(industry) {
+  const normalized = String(industry ?? "").toLowerCase();
+  const matched = INDUSTRY_ICON_RULES.find(({ keys }) =>
+    keys.some((key) => normalized.includes(key.toLowerCase())),
+  );
+  return matched?.Icon ?? CircleDot;
+}
+
 function microReducer(state, action) {
   switch (action.type) {
     case "start":
@@ -35,35 +76,53 @@ function microReducer(state, action) {
   }
 }
 
-function extractInds(macroData) {
-  const count = {};
-  (macroData ?? []).forEach((row) => {
-    const inds = Array.isArray(row.ind_depth1)
-      ? row.ind_depth1
-      : row.ind_depth1
-        ? [row.ind_depth1]
-        : [];
-    inds.forEach((ind) => {
-      count[ind] = (count[ind] || 0) + 1;
-    });
-  });
-  return Object.entries(count)
-    .sort((a, b) => b[1] - a[1])
-    .map(([ind]) => ind);
+function getPayload(data) {
+  return Array.isArray(data) ? data[0] : data;
 }
 
 export default function MediaDetail({ media, onBack, onSelectMix }) {
   const { bookmarkedIds } = useBookmark();
-  const [availableInds, setAvailableInds] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState("");
-  const initializedRef = useRef(false);
 
   const [{ data: microData, loading, error }, dispatch] = useReducer(
     microReducer,
     { data: null, loading: false, error: null },
   );
 
+  const industryStats = useMemo(() => {
+    const topInds = Array.isArray(media.top_inds) ? media.top_inds : [];
+    const stats = topInds
+      .map((item) => {
+        const count = Number(
+          item.industry_mix_cnt ??
+          item.count ??
+          item.mix_cnt ??
+          item.cnt ??
+          0,
+        );
+        return {
+          industry: item.industry,
+          count: count,
+        };
+      })
+      .filter((item) => item.industry && item.count > 0);
+
+    const total = stats.reduce((sum, item) => sum + item.count, 0);
+    return stats
+      .map((item) => ({
+        ...item,
+        pct: total > 0 ? (item.count / total) * 100 : 0,
+      }))
+      .sort((a, b) => b.count - a.count || a.industry.localeCompare(b.industry));
+  }, [media.top_inds]);
+
   useEffect(() => {
+    setSelectedIndustry("");
+  }, [media.media]);
+
+  useEffect(() => {
+    let cancelled = false;
+
     dispatch({ type: "start" });
     axios
       .post(`${endpoint}/get_media_micro/`, {
@@ -71,20 +130,20 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
         industry: selectedIndustry || null,
       })
       .then((res) => {
-        const payload = Array.isArray(res.data) ? res.data[0] : res.data;
-        dispatch({ type: "success", payload });
+        if (cancelled) return;
 
-        if (!initializedRef.current && Array.isArray(payload?.macro_data)) {
-          const inds = extractInds(payload.macro_data);
-          initializedRef.current = true;
-          setAvailableInds(inds);
-          if (inds.length > 0) setSelectedIndustry(inds[0]);
-        }
+        const payload = getPayload(res.data);
+        dispatch({ type: "success", payload });
       })
       .catch((err) => {
+        if (cancelled) return;
         console.error("[get_media_micro] 오류:", err);
         dispatch({ type: "error", payload: "데이터를 불러오지 못했습니다." });
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [media.media, selectedIndustry]);
 
   const targets = Array.isArray(microData?.target_demo_cnt)
@@ -111,32 +170,43 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
         <div className="mix-hero-name">{media.media}</div>
         <br />
 
-        <div className="mix-hero-body">
-          <div className="mix-hero-info">
-            <div className="mix-info-row">
-              <span className="mix-info-label">업종</span>
-              <select
-                className="hero-ind-select"
-                value={selectedIndustry}
-                onChange={(e) => setSelectedIndustry(e.target.value)}
-                disabled={availableInds.length === 0}
-              >
-                <option value="">전체</option>
-                {availableInds.map((ind) => (
-                  <option key={ind} value={ind}>
-                    {ind}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mix-info-row">
-              <span className="mix-info-label">
-                업종 내 매체 포함 미디어믹스 수
+        <div className="detail-industry-block">
+          <div className="detail-industry-icons">
+            <button
+              className={`industry-chip detail-industry-chip ${selectedIndustry === "" ? "selected" : ""
+                }`}
+              type="button"
+              onClick={() => setSelectedIndustry("")}
+              style={{ "--gauge": "100%" }}
+              title={`전체 ${(media.mix_cnt ?? 0).toLocaleString()}건`}
+            >
+              <CircleDot size={15} strokeWidth={2.2} />
+              <span className="industry-chip-name">전체</span>
+              <span className="industry-chip-meta">
+                {(media.mix_cnt ?? 0).toLocaleString()}건 · 100%
               </span>
-              <span className="mix-info-value">
-                {loading ? "-" : (microData?.mix_cnt ?? 0).toLocaleString()}
-              </span>
-            </div>
+            </button>
+
+            {industryStats.map(({ industry, count, pct }) => {
+              const Icon = getIndustryIcon(industry);
+              return (
+                <button
+                  key={industry}
+                  className={`industry-chip detail-industry-chip ${selectedIndustry === industry ? "selected" : ""
+                    }`}
+                  type="button"
+                  onClick={() => setSelectedIndustry(industry)}
+                  style={{ "--gauge": `${Math.max(pct, 3)}%` }}
+                  title={`${industry} ${count.toLocaleString()}건 (${pct.toFixed(1)}%)`}
+                >
+                  <Icon size={15} strokeWidth={2.2} />
+                  <span className="industry-chip-name">{industry}</span>
+                  <span className="industry-chip-meta">
+                    {count.toLocaleString()}건 · {pct.toFixed(1)}%
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
