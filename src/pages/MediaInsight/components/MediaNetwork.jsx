@@ -91,20 +91,23 @@ export default function MediaNetwork({ network, currentMedia }) {
             x: nx_(n.x),
             y: ny_(n.y),
             symbolSize: isCurrent
-              ? Math.max(16, sz * 40 + 10)
+              ? Math.max(10, sz * 28 + 6)
               : Math.max(8, sz * 32 + 6),
             itemStyle: {
               color: isCurrent ? "#6366f1" : lerpColor(distMap[n.id] ?? 1),
-              borderColor: isCurrent ? "#818cf8" : "rgba(255,255,255,0.6)",
-              borderWidth: isCurrent ? 2 : 1,
-              shadowBlur: isCurrent ? 12 : 0,
-              shadowColor: isCurrent ? "rgba(99,102,241,0.4)" : "transparent",
+              borderColor: "rgba(255,255,255,0.6)",
+              borderWidth: 1,
+              shadowBlur: 0,
             },
             label: {
               color: isCurrent ? "#4f46e5" : "#6b7280",
               fontWeight: isCurrent ? 700 : 400,
               fontSize: isCurrent ? 12 : 10,
             },
+            tooltip: isCurrent ? { show: false } : {},
+            blur: isCurrent
+              ? { itemStyle: { opacity: 1 }, label: { opacity: 1 } }
+              : {},
           };
         }),
         links: visibleEdges.map((e) => ({
