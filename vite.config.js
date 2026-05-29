@@ -8,7 +8,6 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     proxy: {
-        
       "/api": {
         target: "http://127.0.0.1:8001",
         // target: "https://mixpedia-fastapi-50799312352.asia-northeast3.run.app",
