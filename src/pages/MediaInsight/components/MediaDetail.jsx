@@ -1,10 +1,24 @@
-import { useEffect, useReducer, useState } from "react";
-import { ChevronLeft, BookmarkCheck } from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
+import {
+  ChevronLeft,
+  Folder, CircleDot,
+  CircleDollarSign, Landmark, Hospital,
+  Hammer, BriefcaseBusiness,
+  Car, Ship, Plane, Bus,
+  GraduationCap, Baby,
+  MonitorSmartphone, Earth,
+  Shirt, SoapDispenserDroplet, ShoppingBasket,
+  SquareStar, MicVocal,
+  Gamepad2, Volleyball,
+  Utensils,
+} from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { endpoint } from "../../../config/config";
-import { useBookmark } from "../../../context/BookmarkContext";
-import { toArr, fmtBudget } from "../../../utils/mixUtils";
+import { toArr } from "../../../utils/mixUtils";
 import MediaNetwork from "./MediaNetwork";
+import { getMediaPresentation } from "../utils/mediaPresentation";
 
 function RankBar({ label, count, max, type }) {
   const pct = max > 0 ? (count / max) * 100 : 0;
@@ -22,63 +36,84 @@ function RankBar({ label, count, max, type }) {
   );
 }
 
-function microReducer(state, action) {
-  switch (action.type) {
-    case "start":
-      return { data: null, loading: true, error: null };
-    case "success":
-      return { data: action.payload, loading: false, error: null };
-    case "error":
-      return { data: null, loading: false, error: action.payload };
-    default:
-      return state;
-  }
+const INDUSTRY_ICON_RULES = [
+  { keys: ["전체"], Icon: Folder },
+  { keys: ["금융", "보험", "은행", "카드", "증권"], Icon: CircleDollarSign },
+  { keys: ["자동차", "차량", "모빌리티"], Icon: Car },
+  { keys: ["정유", "수송"], Icon: Ship },
+  { keys: ["건설", "부동산"], Icon: Hammer },
+  { keys: ["식품", "음료", "외식", "푸드", "주류"], Icon: Utensils },
+  { keys: ["의료", "건강", "제약", "헬스"], Icon: Hospital },
+  { keys: ["항공", "숙박"], Icon: Plane },
+  { keys: ["여행", "교통"], Icon: Bus },
+  { keys: ["결혼", "출산", "육아"], Icon: Baby },
+  { keys: ["가전", "IT", "통신", "모바일", "전자"], Icon: MonitorSmartphone },
+  { keys: ["미용", "화장품"], Icon: SoapDispenserDroplet },
+  { keys: ["패션", "의류"], Icon: Shirt },
+  { keys: ["교육", "학습", "학교"], Icon: GraduationCap },
+  { keys: ["스포츠"], Icon: Volleyball },
+  { keys: ["게임"], Icon: Gamepad2 },
+  { keys: ["엔터", "문화", "콘텐츠"], Icon: SquareStar },
+  { keys: ["공연"], Icon: MicVocal },
+  { keys: ["기업", "B2B", "비즈니스"], Icon: BriefcaseBusiness },
+  { keys: ["공공"], Icon: Landmark },
+  { keys: ["ICT"], Icon: Earth },
+  { keys: ["유통", "쇼핑", "커머스", "마트"], Icon: ShoppingBasket },
+];
+
+function getIndustryIcon(industry) {
+  const normalized = String(industry ?? "").toLowerCase();
+  const matched = INDUSTRY_ICON_RULES.find(({ keys }) =>
+    keys.some((key) => normalized.includes(key.toLowerCase())),
+  );
+  return matched?.Icon ?? CircleDot;
 }
 
 export default function MediaDetail({ media, onBack, onSelectMix }) {
-  const { bookmarkedIds } = useBookmark();
-  const [availableInds, setAvailableInds] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState("");
 
-  const [{ data: microData, loading, error }, dispatch] = useReducer(
-    microReducer,
-    { data: null, loading: false, error: null },
-  );
+  const {
+    data: microData,
+    isLoading: loading,
+    isError,
+  } = useQuery({
+    queryKey: ["media-micro", media.media, selectedIndustry],
+    queryFn: () =>
+      axios
+        .post(`${endpoint}/get_media_micro/`, {
+          media: media.media,
+          industry: selectedIndustry || null,
+        })
+        .then((res) => (Array.isArray(res.data) ? res.data[0] : res.data)),
+    enabled: !!media.media,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const error = isError ? "데이터를 불러오지 못했습니다." : null;
+
+  const industryStats = useMemo(() => {
+    const topInds = Array.isArray(media.top_inds) ? media.top_inds : [];
+    const stats = topInds
+      .map((item) => ({
+        industry: item.industry,
+        count: Number(item.industry_mix_cnt ?? item.count ?? item.mix_cnt ?? item.cnt ?? 0),
+      }))
+      .filter((item) => item.industry && item.count > 0);
+
+    const total = stats.reduce((sum, item) => sum + item.count, 0);
+    return stats
+      .map((item) => ({
+        ...item,
+        pct: total > 0 ? (item.count / total) * 100 : 0,
+      }))
+      .sort((a, b) => b.count - a.count || a.industry.localeCompare(b.industry));
+  }, [media.top_inds]);
 
   useEffect(() => {
     setSelectedIndustry("");
-    const inds = Array.isArray(media.top_inds)
-      ? media.top_inds.map((t) => t.industry).filter(Boolean)
-      : [];
-    setAvailableInds(inds);
   }, [media.media]);
 
-  useEffect(() => {
-    let cancelled = false;
-    dispatch({ type: "start" });
-    axios
-      .post(`${endpoint}/get_media_micro/`, {
-        media: media.media,
-        industry: selectedIndustry || null,
-      })
-      .then((res) => {
-        if (cancelled) return;
-        const payload = Array.isArray(res.data) ? res.data[0] : res.data;
-        dispatch({ type: "success", payload });
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        console.error("[get_media_micro] 오류:", err);
-        dispatch({ type: "error", payload: "데이터를 불러오지 못했습니다." });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [media.media, selectedIndustry]);
-
-  const targets = Array.isArray(microData?.target_demo_cnt)
-    ? microData.target_demo_cnt
-    : [];
+  const targets = Array.isArray(microData?.target_demo_cnt) ? microData.target_demo_cnt : [];
   const maxTarget = targets[0]?.target_mix_cnt || 0;
 
   const networkNodes = Array.isArray(microData?.media_network?.nodes)
@@ -89,43 +124,71 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
     .sort((a, b) => b.count - a.count);
   const maxCoMedia = coMedia[0]?.count || 0;
 
+  const { Icon, brandIcon, letterIcon, logoSrc, accent, soft } =
+    getMediaPresentation(media.media);
+
   return (
     <div className="media-detail">
-      <button className="mix-back-btn" onClick={onBack}>
+      <button className="back-btn" onClick={onBack}>
         <ChevronLeft size={14} strokeWidth={2} />
         목록으로
       </button>
 
       <div className="mix-hero">
-        <div className="mix-hero-name">{media.media}</div>
+        <div className="mix-hero-name">
+          <span
+            className="media-detail-icon"
+            style={{ "--media-accent": accent, "--media-soft": soft }}
+          >
+            {logoSrc ? (
+              <img src={logoSrc} alt="" className="media-card-logo" />
+            ) : brandIcon ? (
+              <FontAwesomeIcon icon={brandIcon} />
+            ) : letterIcon ? (
+              <span className="media-card-letter-icon">{letterIcon}</span>
+            ) : (
+              <Icon size={16} strokeWidth={2} />
+            )}
+          </span>
+          {media.media}
+        </div>
         <br />
 
-        <div className="mix-hero-body">
-          <div className="mix-hero-info">
-            <div className="mix-info-row">
-              <span className="mix-info-label">업종</span>
-              <select
-                className="hero-ind-select"
-                value={selectedIndustry}
-                onChange={(e) => setSelectedIndustry(e.target.value)}
-                disabled={availableInds.length === 0}
-              >
-                <option value="">전체</option>
-                {availableInds.map((ind) => (
-                  <option key={ind} value={ind}>
-                    {ind}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mix-info-row">
-              <span className="mix-info-label">
-                업종 내 매체 포함 미디어믹스 수
+        <div className="detail-industry-block">
+          <div className="detail-industry-icons">
+            <button
+              className={`industry-chip detail-industry-chip${selectedIndustry === "" ? " selected" : ""}`}
+              type="button"
+              onClick={() => setSelectedIndustry("")}
+              style={{ "--gauge": "100%" }}
+              title={`전체 ${(media.mix_cnt ?? 0).toLocaleString()}건`}
+            >
+              <CircleDot size={15} strokeWidth={2.2} />
+              <span className="industry-chip-name">전체</span>
+              <span className="industry-chip-meta">
+                {(media.mix_cnt ?? 0).toLocaleString()}건 · 100%
               </span>
-              <span className="mix-info-value">
-                {loading ? "-" : (microData?.mix_cnt ?? 0).toLocaleString()}
-              </span>
-            </div>
+            </button>
+
+            {industryStats.map(({ industry, count, pct }) => {
+              const Icon = getIndustryIcon(industry);
+              return (
+                <button
+                  key={industry}
+                  className={`industry-chip detail-industry-chip${selectedIndustry === industry ? " selected" : ""}`}
+                  type="button"
+                  onClick={() => setSelectedIndustry(industry)}
+                  style={{ "--gauge": `${Math.max(pct, 3)}%` }}
+                  title={`${industry} ${count.toLocaleString()}건 (${pct.toFixed(1)}%)`}
+                >
+                  <Icon size={15} strokeWidth={2.2} />
+                  <span className="industry-chip-name">{industry}</span>
+                  <span className="industry-chip-meta">
+                    {count.toLocaleString()}건 · {pct.toFixed(1)}%
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -133,19 +196,17 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
       <br />
 
       {error && (
-        <div className="mix-micro-state mix-micro-state--error">{error}</div>
+        <div className="state-msg state-msg--error">{error}</div>
       )}
 
-      {loading && <div className="mix-micro-state">데이터 불러오는 중...</div>}
+      {loading && <div className="state-msg">데이터 불러오는 중...</div>}
 
       {!loading && !error && (
         <div className="insight-grid">
-          <div className="mix-detail-section">
-            <div className="mix-detail-section-hdr">
-              <span className="mix-detail-section-title">
-                업종 내 주요 데모 타겟
-              </span>
-              <span className="mix-detail-section-badge">
+          <div className="section">
+            <div className="section-hdr">
+              <span className="section-title">주요 데모 타겟</span>
+              <span className="section-badge">
                 Top 10 · 미디어믹스 수 기준
               </span>
             </div>
@@ -153,25 +214,23 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
               {targets.length === 0 ? (
                 <div className="rank-empty">데이터 없음</div>
               ) : (
-                targets
-                  .slice(0, 10)
-                  .map((t, i) => (
-                    <RankBar
-                      key={i}
-                      label={t.target_demo}
-                      count={t.target_mix_cnt}
-                      max={maxTarget}
-                      type="target"
-                    />
-                  ))
+                targets.slice(0, 10).map((t, i) => (
+                  <RankBar
+                    key={i}
+                    label={t.target_demo}
+                    count={t.target_mix_cnt}
+                    max={maxTarget}
+                    type="target"
+                  />
+                ))
               )}
             </div>
           </div>
 
-          <div className="mix-detail-section">
-            <div className="mix-detail-section-hdr">
-              <span className="mix-detail-section-title">함께 사용된 매체</span>
-              <span className="mix-detail-section-badge">
+          <div className="section">
+            <div className="section-hdr">
+              <span className="section-title">함께 사용된 매체</span>
+              <span className="section-badge">
                 Top 10 · 함께 사용된 믹스 수
               </span>
             </div>
@@ -179,28 +238,25 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
               {coMedia.length === 0 ? (
                 <div className="rank-empty">데이터 없음</div>
               ) : (
-                coMedia
-                  .slice(0, 10)
-                  .map((n, i) => (
-                    <RankBar
-                      key={i}
-                      label={n.id}
-                      count={n.count}
-                      max={maxCoMedia}
-                      type="ind"
-                    />
-                  ))
+                coMedia.slice(0, 10).map((n, i) => (
+                  <RankBar
+                    key={i}
+                    label={n.id}
+                    count={n.count}
+                    max={maxCoMedia}
+                    type="ind"
+                  />
+                ))
               )}
             </div>
           </div>
+
           {Array.isArray(microData?.media_network?.nodes) &&
             microData.media_network.nodes.length > 0 && (
-              <div className="mix-detail-section insight-section--full">
-                <div className="mix-detail-section-hdr">
-                  <span className="mix-detail-section-title">
-                    매체 관계 네트워크
-                  </span>
-                  <span className="mix-detail-section-badge">
+              <div className="section section--full">
+                <div className="section-hdr">
+                  <span className="section-title">매체 관계 네트워크</span>
+                  <span className="section-badge">
                     업종 필터 기준 · 줌/패닝 가능 · 매개 중심성 높은 노드 보라색
                   </span>
                 </div>
@@ -213,66 +269,6 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
         </div>
       )}
 
-      {!loading &&
-        !error &&
-        Array.isArray(microData?.macro_data) &&
-        microData.macro_data.length > 0 && (
-          <>
-            <br />
-            <div className="mix-micro-wrap">
-              <div className="mix-detail-section-hdr">
-                <span className="mix-detail-section-title">
-                  이 매체가 포함된 믹스
-                </span>
-              </div>
-              <div className="similar-grid">
-                {microData.macro_data.map((item, i) => {
-                  const cardId = Number(item.file_id);
-                  const cardBm = bookmarkedIds.has(cardId);
-                  return (
-                    <div
-                      key={i}
-                      className="similar-card"
-                      onClick={() => onSelectMix?.(item)}
-                    >
-                      {cardBm && (
-                        <span className="similar-card-bm">
-                          <BookmarkCheck size={13} strokeWidth={2} />
-                        </span>
-                      )}
-                      <div className="similar-card-name">
-                        {item.file_path ||
-                          item.file_name ||
-                          item.file_id ||
-                          "-"}
-                      </div>
-                      <div className="similar-card-tags">
-                        {toArr(item.medias).map((m) => (
-                          <span
-                            key={m}
-                            className={`mix-tag${m === media.media ? " mix-tag--current" : ""}`}
-                          >
-                            {m}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="similar-card-stats">
-                        <div>
-                          <span className="similar-stat-label">
-                            예산 (Gross, Market Cost)
-                          </span>
-                          <span className="similar-stat-value">
-                            {fmtBudget(item.budget_sum)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </>
-        )}
     </div>
   );
 }

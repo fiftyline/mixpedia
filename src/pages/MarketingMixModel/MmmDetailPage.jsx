@@ -48,13 +48,13 @@ export default function MmmDetailPage() {
   return (
     <div className="mmm-page">
       <div>
-        <button className="mmm-back-btn" onClick={() => navigate("/mmm/my-mmm")}>
+        <button className="back-btn" onClick={() => navigate("/mmm/my-mmm")}>
           <ChevronLeft size={14} /> 목록으로
         </button>
       </div>
 
-      {loading && <div className="mix-micro-state">데이터를 불러오는 중...</div>}
-      {error && <div className="mix-micro-state mix-micro-state--error">{error}</div>}
+      {loading && <div className="state-msg">데이터를 불러오는 중...</div>}
+      {error && <div className="state-msg state-msg--error">{error}</div>}
 
       {data && (
         <>

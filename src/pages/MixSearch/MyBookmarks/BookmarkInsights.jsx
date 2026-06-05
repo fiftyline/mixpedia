@@ -266,11 +266,11 @@ function mediaFreqOption(rows) {
 function Section({ title, badge, children, full }) {
   return (
     <div
-      className={`mix-detail-section${full ? " insight-section--full" : ""}`}
+      className={`section${full ? " section--full" : ""}`}
     >
-      <div className="mix-detail-section-hdr">
-        <span className="mix-detail-section-title">{title}</span>
-        {badge && <span className="mix-detail-section-badge">{badge}</span>}
+      <div className="section-hdr">
+        <span className="section-title">{title}</span>
+        {badge && <span className="section-badge">{badge}</span>}
       </div>
       {children}
     </div>
@@ -305,7 +305,7 @@ export default function BookmarkInsights({ mixIds, onBack }) {
 
   return (
     <div className="mix-detail">
-      <button className="mix-back-btn" onClick={onBack}>
+      <button className="back-btn" onClick={onBack}>
         <ChevronLeft size={14} strokeWidth={2} />
         북마크 목록으로
       </button>
@@ -351,9 +351,9 @@ export default function BookmarkInsights({ mixIds, onBack }) {
 
       <br />
 
-      {loading && <div className="mix-micro-state">분석 중...</div>}
+      {loading && <div className="state-msg">분석 중...</div>}
       {error && (
-        <div className="mix-micro-state mix-micro-state--error">{error}</div>
+        <div className="state-msg state-msg--error">{error}</div>
       )}
 
       {!loading && !error && macro && (

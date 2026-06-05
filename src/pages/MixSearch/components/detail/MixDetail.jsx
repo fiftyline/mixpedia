@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ChevronLeft,
   ExternalLink,
@@ -7,6 +7,7 @@ import {
   BookmarkCheck,
   Loader,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { endpoint } from "../../../../config/config";
 import { useBookmark } from "../../../../context/BookmarkContext";
@@ -23,43 +24,29 @@ function pdfLabel(url) {
   }
 }
 
-function microReducer(state, action) {
-  switch (action.type) {
-    case "start":
-      return { data: null, loading: true, error: null };
-    case "success":
-      return { data: action.payload, loading: false, error: null };
-    case "error":
-      return { data: null, loading: false, error: action.payload };
-    default:
-      return state;
-  }
-}
-
 export default function MixDetail({ mix, onBack, onSelect }) {
   const { bookmarkedIds, pendingIds, toggleBookmark } = useBookmark();
   const bmId = Number(mix.file_id);
   const isBookmarked = bookmarkedIds.has(bmId);
   const isPending = pendingIds.has(bmId);
 
-  const [
-    { data: microData, loading: microLoading, error: microError },
-    dispatch,
-  ] = useReducer(microReducer, { data: null, loading: false, error: null });
-
   const [editOpen, setEditOpen] = useState(false);
 
-  useEffect(() => {
-    if (!mix.file_id) return;
-    dispatch({ type: "start" });
-    axios
-      .post(`${endpoint}/search_micro/`, { file_id: mix.file_id })
-      .then((res) => dispatch({ type: "success", payload: res.data }))
-      .catch((err) => {
-        console.error("[search_micro] 오류", err);
-        dispatch({ type: "error", payload: "데이터를 불러오지 못했습니다." });
-      });
-  }, [mix.file_id]);
+  const {
+    data: microData,
+    isLoading: microLoading,
+    isError: microIsError,
+  } = useQuery({
+    queryKey: ["mix-micro", mix.file_id],
+    queryFn: () =>
+      axios
+        .post(`${endpoint}/search_micro/`, { file_id: String(mix.file_id) })
+        .then((res) => res.data),
+    enabled: !!mix.file_id,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const microError = microIsError ? "데이터를 불러오지 못했습니다." : null;
 
   const mediaBudget = useMemo(() => {
     if (!microData?.file_micro) return [];
@@ -92,7 +79,7 @@ export default function MixDetail({ mix, onBack, onSelect }) {
 
   return (
     <div className="mix-detail">
-      <button className="mix-back-btn" onClick={onBack}>
+      <button className="back-btn" onClick={onBack}>
         <ChevronLeft size={14} strokeWidth={2} />
         목록으로
       </button>
@@ -213,7 +200,7 @@ export default function MixDetail({ mix, onBack, onSelect }) {
       </div>
 
       {microError && (
-        <div className="mix-micro-state mix-micro-state--error">
+        <div className="state-msg state-msg--error">
           {microError}
         </div>
       )}
@@ -222,9 +209,9 @@ export default function MixDetail({ mix, onBack, onSelect }) {
 
       {/* 상세 집행 내역 */}
       {hasMicro && (
-        <div className="mix-detail-section">
-          <div className="mix-detail-section-hdr">
-            <span className="mix-detail-section-title">Media Mix</span>
+        <div className="section">
+          <div className="section-hdr">
+            <span className="section-title">Media Mix</span>
           </div>
           <MixMicroGrid items={microItems} />
         </div>
@@ -235,8 +222,8 @@ export default function MixDetail({ mix, onBack, onSelect }) {
       {/* 유사 미디어믹스 */}
       {hasMicro && similarMixes.length > 0 && (
         <div className="mix-micro-wrap">
-          <div className="mix-detail-section-hdr">
-            <span className="mix-detail-section-title">
+          <div className="section-hdr">
+            <span className="section-title">
               이 믹스와 유사한 믹스
             </span>
           </div>

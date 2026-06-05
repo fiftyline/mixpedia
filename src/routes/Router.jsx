@@ -7,6 +7,7 @@ import MmmCreatePage from "../pages/MarketingMixModel/MmmCreatePage";
 import MmmMyModelsPage from "../pages/MarketingMixModel/MmmMyModelsPage";
 import MmmDetailPage from "../pages/MarketingMixModel/MmmDetailPage";
 import LoginPage from "../pages/Login/LoginPage";
+import MixDetailPage from "../pages/MixSearch/MixDetailPage";
 import PrivateRoute from "./PrivateRoute";
 
 export default function Router() {
@@ -18,6 +19,7 @@ export default function Router() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Navigate to="/mix-search" replace />} />
             <Route path="/mix-search" element={<MixSearchPage />} />
+            <Route path="/mix-search/detail/:file_id" element={<MixDetailPage />} />
             <Route path="/my-bookmarks" element={<MyBookmarksPage />} />
             <Route path="/media-insight" element={<MediaInsightPage />} />
             <Route path="/mmm/create" element={<MmmCreatePage />} />

@@ -104,7 +104,7 @@ export default function MmmMyModelsPage() {
       />
 
       {error && (
-        <div className="mix-micro-state mix-micro-state--error">{error}</div>
+        <div className="state-msg state-msg--error">{error}</div>
       )}
 
       <div

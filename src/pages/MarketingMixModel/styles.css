@@ -1490,23 +1490,6 @@
 }
 
 /* ── Detail Page ── */
-.mmm-back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 8px;
-  transition: color 0.15s;
-}
-.mmm-back-btn:hover {
-  color: var(--accent);
-}
 
 .mmm-detail-meta-grid {
   display: grid;

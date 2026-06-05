@@ -143,9 +143,9 @@ export default function MyBookmarksPage() {
       )}
 
       {error ? (
-        <div className="mix-micro-state mix-micro-state--error">{error}</div>
+        <div className="state-msg state-msg--error">{error}</div>
       ) : loading ? (
-        <div className="mix-micro-state">불러오는 중...</div>
+        <div className="state-msg">불러오는 중...</div>
       ) : (
         <MixTable
           results={results}
