@@ -25,6 +25,10 @@ export default function SidebarLayout() {
       </div>
 
       <nav className="sidebar-nav">
+        <NavLink to="/media-insight" className="sidebar-link">
+          Media
+        </NavLink>
+
         {/* Media Mix group */}
         <div className={`sidebar-group-label${inMixGroup ? " sidebar-group-label--active" : ""}`}>
           Media Mix
@@ -37,10 +41,6 @@ export default function SidebarLayout() {
             내 북마크
           </NavLink>
         </div>
-
-        <NavLink to="/media-insight" className="sidebar-link">
-          Media
-        </NavLink>
 
         {/* MMM group */}
         <div className={`sidebar-group-label${inMmmGroup ? " sidebar-group-label--active" : ""}`}>
