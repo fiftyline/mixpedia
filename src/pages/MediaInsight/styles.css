@@ -259,7 +259,6 @@
   gap: 16px;
 }
 
-
 .insight-placeholder {
   display: flex;
   flex-direction: column;
@@ -420,7 +419,11 @@
   font-family: var(--font-body);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .industry-chip::before {
@@ -428,7 +431,11 @@
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--gauge);
-  background: linear-gradient(90deg, rgba(148,163,184,0.22), rgba(148,163,184,0.08));
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.22),
+    rgba(148, 163, 184, 0.08)
+  );
   z-index: -1;
   transition: width 0.25s ease;
 }
@@ -482,7 +489,11 @@
 
 .industry-chip.selected::before,
 .industry-chip:hover::before {
-  background: linear-gradient(90deg, rgba(99,102,241,0.28), rgba(99,102,241,0.12));
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.28),
+    rgba(99, 102, 241, 0.12)
+  );
 }
 
 .detail-industry-block {
@@ -527,7 +538,10 @@
   text-align: left;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .media-card:hover {
@@ -580,7 +594,10 @@
 .media-card-arrow {
   color: var(--text-tertiary);
   opacity: 0;
-  transition: color 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+  transition:
+    color 0.18s ease,
+    opacity 0.18s ease,
+    transform 0.18s ease;
 }
 
 .media-card:hover .media-card-arrow,
@@ -631,7 +648,7 @@
   max-width: 100%;
   padding: 2px 7px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--media-accent) 18%, var(--border));
+  border: 1px solid color-mix(in srgb, var(--media-soft) 20%, var(--border));
   border-radius: 4px;
   background: var(--media-soft);
   color: var(--media-accent);

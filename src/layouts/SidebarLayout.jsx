@@ -38,7 +38,7 @@ export default function SidebarLayout() {
             Media Mix 조회
           </NavLink>
           <NavLink to="/my-bookmarks" className="sidebar-sublink">
-            내 북마크
+            내 폴더
           </NavLink>
         </div>
 

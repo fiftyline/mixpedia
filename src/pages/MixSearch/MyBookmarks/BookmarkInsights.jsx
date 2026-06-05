@@ -307,11 +307,11 @@ export default function BookmarkInsights({ mixIds, onBack }) {
     <div className="mix-detail">
       <button className="back-btn" onClick={onBack}>
         <ChevronLeft size={14} strokeWidth={2} />
-        북마크 목록으로
+        폴더 목록으로
       </button>
 
       <div className="mix-hero">
-        <div className="mix-hero-name">북마크 분석</div>
+        <div className="mix-hero-name">폴더 분석</div>
         <br></br>
         <hr></hr>
         {macro && (
@@ -400,7 +400,7 @@ export default function BookmarkInsights({ mixIds, onBack }) {
             <div className="insight-grid">
               <Section
                 title="매체별 평균 예산 비중"
-                badge="북마크 믹스 기준"
+                badge="폴더 믹스 기준"
                 full={false}
               >
                 <ReactECharts
@@ -417,7 +417,7 @@ export default function BookmarkInsights({ mixIds, onBack }) {
 
               <Section
                 title="매체 출현 빈도"
-                badge="북마크 내 포함 믹스 수"
+                badge="폴더 내 포함 믹스 수"
                 full={false}
               >
                 <ReactECharts
@@ -440,7 +440,7 @@ export default function BookmarkInsights({ mixIds, onBack }) {
           {hasNetwork && (
             <Section
               title="매체 관계 네트워크"
-              badge="북마크 기준 · 줌/패닝 가능"
+              badge="폴더 기준 · 줌/패닝 가능"
               full
             >
               <MediaNetwork network={network} currentMedia={null} />

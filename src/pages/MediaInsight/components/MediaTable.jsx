@@ -7,21 +7,25 @@ import { endpoint } from "../../../config/config";
 import { getMediaPresentation } from "../utils/mediaPresentation";
 
 const fetchMediaMacro = () =>
-  axios.post(`${endpoint}/get_media_macro/`, {}).then((res) =>
-    Array.isArray(res.data) ? res.data : [],
-  );
+  axios
+    .post(`${endpoint}/get_media_macro/`, {})
+    .then((res) => (Array.isArray(res.data) ? res.data : []));
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 10;
 
 function getIndustries(item) {
   return Array.isArray(item.top_inds)
-    ? item.top_inds.slice(0, 5).map((i) => i.industry).filter(Boolean)
+    ? item.top_inds
+        .slice(0, 5)
+        .map((i) => i.industry)
+        .filter(Boolean)
     : [];
 }
 
 export default function MediaTable({ onSelect }) {
   const sentinelRef = useRef(null);
   const [filterMedia, setFilterMedia] = useState("");
+  const [filterIndustry, setFilterIndustry] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const {
@@ -36,13 +40,37 @@ export default function MediaTable({ onSelect }) {
 
   const error = isError ? "데이터를 불러오지 못했습니다." : null;
 
+  const allIndustries = useMemo(() => {
+    const set = new Set();
+    allData.forEach((item) => {
+      if (Array.isArray(item.top_inds)) {
+        item.top_inds.forEach((i) => {
+          if (i.industry) set.add(i.industry);
+        });
+      }
+    });
+    return [...set].sort((a, b) => a.localeCompare(b));
+  }, [allData]);
+
   const filteredData = useMemo(() => {
     const query = filterMedia.trim().toLowerCase();
-    if (!query) return allData;
-    return allData.filter((item) =>
-      String(item.media ?? "").toLowerCase().includes(query),
-    );
-  }, [allData, filterMedia]);
+    return allData.filter((item) => {
+      if (
+        query &&
+        !String(item.media ?? "")
+          .toLowerCase()
+          .includes(query)
+      )
+        return false;
+      if (filterIndustry) {
+        const inds = Array.isArray(item.top_inds)
+          ? item.top_inds.map((i) => i.industry)
+          : [];
+        if (!inds.includes(filterIndustry)) return false;
+      }
+      return true;
+    });
+  }, [allData, filterMedia, filterIndustry]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -51,7 +79,9 @@ export default function MediaTable({ onSelect }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
-        setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredData.length));
+        setVisibleCount((prev) =>
+          Math.min(prev + PAGE_SIZE, filteredData.length),
+        );
       },
       { rootMargin: "240px" },
     );
@@ -60,7 +90,7 @@ export default function MediaTable({ onSelect }) {
   }, [filteredData.length, visibleCount]);
 
   const visibleData = filteredData.slice(0, visibleCount);
-  const isFiltered = filterMedia.trim().length > 0;
+  const isFiltered = filterMedia.trim().length > 0 || filterIndustry !== "";
 
   return (
     <div className="media-table-wrap">
@@ -87,12 +117,31 @@ export default function MediaTable({ onSelect }) {
             }}
           />
         </div>
+        <div className="mtf-item">
+          <label className="mtf-label">업종</label>
+          <select
+            className="mtf-input"
+            value={filterIndustry}
+            onChange={(e) => {
+              setFilterIndustry(e.target.value);
+              setVisibleCount(PAGE_SIZE);
+            }}
+          >
+            <option value="">전체</option>
+            {allIndustries.map((ind) => (
+              <option key={ind} value={ind}>
+                {ind}
+              </option>
+            ))}
+          </select>
+        </div>
         {isFiltered && (
           <button
             className="mtf-reset"
             type="button"
             onClick={() => {
               setFilterMedia("");
+              setFilterIndustry("");
               setVisibleCount(PAGE_SIZE);
             }}
           >
@@ -100,7 +149,9 @@ export default function MediaTable({ onSelect }) {
           </button>
         )}
         {!loading && !error && (
-          <span className="mtf-count">{filteredData.length.toLocaleString()}개</span>
+          <span className="mtf-count">
+            {filteredData.length.toLocaleString()}개
+          </span>
         )}
       </div>
 
@@ -133,23 +184,33 @@ export default function MediaTable({ onSelect }) {
                       ) : brandIcon ? (
                         <FontAwesomeIcon icon={brandIcon} />
                       ) : letterIcon ? (
-                        <span className="media-card-letter-icon">{letterIcon}</span>
+                        <span className="media-card-letter-icon">
+                          {letterIcon}
+                        </span>
                       ) : (
                         <Icon size={18} strokeWidth={2} />
                       )}
                     </span>
-                    <ArrowUpRight className="media-card-arrow" size={15} strokeWidth={2} />
+                    <ArrowUpRight
+                      className="media-card-arrow"
+                      size={15}
+                      strokeWidth={2}
+                    />
                   </span>
                   <span className="media-card-name">{item.media || "-"}</span>
                   <span className="media-card-metric">
-                    <strong>{Number(item.mix_cnt ?? 0).toLocaleString()}</strong>
+                    <strong>
+                      {Number(item.mix_cnt ?? 0).toLocaleString()}
+                    </strong>
                     <small>개</small>
                     <small>믹스 포함</small>
                   </span>
                   <span className="media-card-industries">
                     {industries.length > 0 ? (
                       industries.map((ind) => (
-                        <span key={ind} className="media-card-industry">{ind}</span>
+                        <span key={ind} className="media-card-industry">
+                          {ind}
+                        </span>
                       ))
                     ) : (
                       <span className="media-card-industry media-card-industry--empty">

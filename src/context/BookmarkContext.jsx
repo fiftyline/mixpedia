@@ -30,15 +30,15 @@ export function BookmarkProvider({ children }) {
       if (wasBookmarked) {
         await axios.post(`${endpoint}/bookmark/remove`, { mix_ids: [id] });
         setBookmarkedIds((prev) => { const next = new Set(prev); next.delete(id); return next; });
-        notify.success("북마크가 해제되었습니다.");
+        notify.success("폴더에서 제거되었습니다.");
       } else {
         await axios.post(`${endpoint}/bookmark/add`, { mix_ids: [id] });
         setBookmarkedIds((prev) => new Set([...prev, id]));
-        notify.success("북마크에 추가되었습니다.");
+        notify.success("폴더에 추가되었습니다.");
       }
       return true;
     } catch {
-      notify.error("북마크 처리 중 오류가 발생했습니다.");
+      notify.error("폴더 처리 중 오류가 발생했습니다.");
       return false;
     } finally {
       setPendingIds((prev) => { const next = new Set(prev); next.delete(id); return next; });
@@ -61,11 +61,11 @@ export function BookmarkProvider({ children }) {
         return next;
       });
       const msg = action === "add"
-        ? `${targets.length}건이 북마크에 추가되었습니다.`
-        : `${targets.length}건의 북마크가 해제되었습니다.`;
+        ? `${targets.length}건이 폴더에 추가되었습니다.`
+        : `${targets.length}건의 폴더에서 제거되었습니다.`;
       notify.success(msg);
     } catch {
-      notify.error("북마크 처리 중 오류가 발생했습니다.");
+      notify.error("폴더 처리 중 오류가 발생했습니다.");
     } finally {
       setPendingIds((prev) => {
         const next = new Set(prev);

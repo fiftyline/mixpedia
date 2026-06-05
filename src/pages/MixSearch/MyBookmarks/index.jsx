@@ -25,7 +25,7 @@ export default function MyBookmarksPage() {
     axios
       .post(`${endpoint}/bookmark/user_bookmark`)
       .then((res) => setResults(Array.isArray(res.data) ? res.data : []))
-      .catch(() => setError("북마크 데이터를 불러오지 못했습니다."))
+      .catch(() => setError("폴더 데이터를 불러오지 못했습니다."))
       .finally(() => setLoading(false));
   }, []);
 
@@ -78,9 +78,9 @@ export default function MyBookmarksPage() {
   return (
     <section className="mix-search-page">
       <div className="page-header">
-        <h1 className="page-title">내 북마크</h1>
+        <h1 className="page-title">내 폴더</h1>
         <p className="page-desc">
-          북마크 목록을 확인하고, 미디어믹스들을 분석합니다.
+          폴더 목록을 확인하고, 미디어믹스들을 분석합니다.
         </p>
       </div>
 
@@ -106,7 +106,7 @@ export default function MyBookmarksPage() {
           disabled={!results.length || confirmReset}
         >
           <Trash2 size={13} strokeWidth={2} />
-          북마크 초기화
+          폴더 초기화
         </button>
       </div>
 
@@ -116,9 +116,9 @@ export default function MyBookmarksPage() {
           onClick={() => !resetting && setConfirmReset(false)}
         >
           <div className="bm-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="bm-modal-title">북마크 초기화</div>
+            <div className="bm-modal-title">폴더 초기화</div>
             <p className="bm-modal-body">
-              북마크 <strong>{bookmarkedIds.size}건</strong>을 모두 초기화
+              폴더 <strong>{bookmarkedIds.size}건</strong>을 모두 초기화
               하시겠습니까?
               <br />이 작업은 되돌릴 수 없습니다.
             </p>
