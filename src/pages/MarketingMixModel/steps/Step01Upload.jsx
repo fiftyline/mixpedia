@@ -157,7 +157,7 @@ export default function Step01Upload({ trainset, setTrainset, uploadedFile, setU
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
             <div className="mmm-req-title" style={{ fontSize: "0.85rem", marginBottom: 0 }}>데이터 예시</div>
             <a
-              href="/mmm_sample_data.xlsx"
+              href="/samples/mmm_sample_data.xlsx"
               download="mmm_sample_data.xlsx"
               className="mmm-sample-download-btn"
             >

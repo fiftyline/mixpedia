@@ -41,7 +41,7 @@ export default function LoginPage() {
       <div className="login-panel">
         <div className="login-brand">
           <div className="login-brand-logo">
-            <img src="/logo.svg" alt="Mixpedia" />
+            <img src="/static/logo-main/logo.svg" alt="Mixpedia" />
             <span className="login-brand-name">MIXPEDIA</span>
           </div>
         </div>
@@ -62,7 +62,7 @@ export default function LoginPage() {
         </div>
 
         <div className="login-panel-footer">
-          <img src="/dmclogo2.png" alt="DMC미디어" className="login-dmc-logo" />
+          <img src="/static/logo-main/dmclogo2.png" alt="DMC미디어" className="login-dmc-logo" />
           <p className="login-panel-team">[D.Match - Team. 광삼데이]</p>
         </div>
       </div>

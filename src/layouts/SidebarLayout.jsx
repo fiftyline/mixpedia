@@ -19,7 +19,7 @@ export default function SidebarLayout() {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="logo-section">
-          <img src="/logo.svg" alt="Mixpedia" className="sidebar-logo" />
+          <img src="/static/logo-main/logo.svg" alt="Mixpedia" className="sidebar-logo" />
           <span className="logo-text">MIXPEDIA</span>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function SidebarLayout() {
           rel="noopener noreferrer"
           className="sidebar-link sidebar-link--logo"
         >
-          <img src="/thedap_logo_bw.png" alt="theDAP" className="sidebar-thedap-logo" />
+          <img src="/static/logo-main/thedap_logo_bw.png" alt="theDAP" className="sidebar-thedap-logo" />
         </a>
       </nav>
 
