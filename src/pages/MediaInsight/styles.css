@@ -751,7 +751,7 @@
 }
 
 .media-card:hover {
-  border-color: var(--media-accent);
+  border: 1px solid color-mix(in srgb, var(--media-accent) 30%, transparent);
   box-shadow: var(--shadow-md);
   transform: translateY(-3px);
 }

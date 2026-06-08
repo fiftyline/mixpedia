@@ -17,33 +17,33 @@ export function getMediaPresentation(media) {
   const name = String(media ?? "").toLowerCase();
 
   // ── Global platforms ──────────────────────────────────────────
-  if (name.includes("google") || name.includes("구글"))
+  if (name.includes("구글") || name.includes("google"))
     return { logoSrc: L("google.png"), accent: "#4285F4", soft: "#F5F9FE" };
-  if (name.includes("youtube") || name.includes("유튜브"))
+  if (name.includes("유튜브") || name.includes("youtube"))
     return { brandIcon: faYoutube, accent: "#FF3000", soft: "#FFF4F2" };
   if (name.includes("메타") || name.includes("meta"))
     return { brandIcon: faMeta, accent: "#0081FB", soft: "#F2F8FF" };
-  if (name.includes("facebook") || name.includes("페이스북"))
+  if (name.includes("페이스북") || name.includes("facebook"))
     return { brandIcon: faFacebookF, accent: "#0081FB", soft: "#F2F8FF" };
-  if (name.includes("instagram") || name.includes("인스타"))
+  if (name.includes("인스타") || name.includes("instagram"))
     return { logoSrc: L("instagram.png"), accent: "#FD1C80", soft: "#FFF3F8" };
-  if (name.includes("tiktok") || name.includes("틱톡"))
+  if (name.includes("틱톡") || name.includes("tiktok"))
     return { brandIcon: faTiktok, accent: "#000000", soft: "#F2F2F2" };
   if (
-    name.includes("twitter") ||
     name.includes("트위터") ||
+    name.includes("twitter") ||
     name.includes("x(트위터)")
   )
     return { brandIcon: faXTwitter, accent: "#000000", soft: "#F2F2F2" };
-  if (name.includes("pinterest") || name.includes("핀터레스트"))
+  if (name.includes("핀터레스트") || name.includes("pinterest"))
     return { brandIcon: faPinterest, accent: "#E41F28", soft: "#FDF4F4" };
   if (name.includes("twitch"))
     return { brandIcon: faTwitch, accent: "#8C44F7", soft: "#F9F5FE" };
-  if (name.includes("linkedin") || name.includes("링크드인"))
+  if (name.includes("링크드인") || name.includes("linkedin"))
     return { logoSrc: L("linkedin.svg"), accent: "#007EBB", soft: "#F2F8FB" };
-  if (name.includes("apple") || name.includes("애플"))
+  if (name.includes("애플") || name.includes("apple"))
     return { logoSrc: L("apple.svg"), accent: "#000000", soft: "#F2F2F2" };
-  if (name.includes("netflix") || name.includes("넷플릭스"))
+  if (name.includes("넷플릭스") || name.includes("netflix"))
     return { logoSrc: L("netflix.png"), accent: "#E40813", soft: "#FDF2F3" };
 
   // ── Naver ecosystem (specific first) ─────────────────────────
@@ -57,7 +57,7 @@ export function getMediaPresentation(media) {
     name.includes("npay")
   )
     return { logoSrc: L("npay.png"), accent: "#03C75A", soft: "#F2FCF6" };
-  if (name.includes("네이버 웹툰") || name.includes("네이버웹툰"))
+  if (name.includes("네이버 웹툰") || name.includes("쿠키오븐"))
     return {
       logoSrc: L("naverwebtoon.png"),
       accent: "#03C75A",
@@ -67,7 +67,9 @@ export function getMediaPresentation(media) {
     return { logoSrc: L("naver.svg"), accent: "#03C75A", soft: "#F2FCF6" };
 
   // ── Kakao ecosystem ────────────────────────────────────────────
-  if (name.includes("kakao") || name.includes("카카오"))
+  if (name.includes("카카오뱅크"))
+    return { logoSrc: L("kakaobank.png"), accent: "#FFCD00", soft: "#F8F9FC" };
+  if (name.includes("카카오") || name.includes("kakao"))
     return { logoSrc: L("kakao.svg"), accent: "#FFCD00", soft: "#F8F9FC" };
 
   // ── Major Korean platforms ─────────────────────────────────────
@@ -229,6 +231,8 @@ export function getMediaPresentation(media) {
     return { logoSrc: L("jobkorea.png"), accent: "#111AFF", soft: "#FBFFF2" };
   if (name.includes("잡플래닛"))
     return { logoSrc: L("jobplanet.png"), accent: "#00C462", soft: "#F2FCF7" };
+    if (name.includes("알바몬"))
+    return { logoSrc: L("albamon.png"), accent: "#FF6100", soft: "#FFF7F2" };
   if (name.includes("자소설닷컴"))
     return { logoSrc: L("jasoseol.png"), accent: "#FF6813", soft: "#FFF7F3" };
   if (name.includes("링커리어"))
@@ -333,10 +337,154 @@ export function getMediaPresentation(media) {
     return { logoSrc: L("manplus.png"), accent: "#000000", soft: "#F2F2F2" };
   if (name.includes("애드패커"))
     return { logoSrc: L("adpacker.png"), accent: "#CF171F", soft: "#FCF3F4" };
-  if (name.includes("에디슨오퍼월") || name.includes("adison"))
+  if (name.includes("에디슨오퍼월") || name.includes("애디슨"))
     return { logoSrc: L("adison.png"), accent: "#5E33B0", soft: "#F7F5FB" };
-  if (name.includes("jtbc"))
-    return { logoSrc: L("jtbc.png"), accent: "#F22D94", soft: "#FEFDF5" };
+  if (name.includes("펫피"))
+    return { logoSrc: L("petp.png"), accent: "#925236", soft: "#F9F6F5" };
+  if (name.includes("cj")|| name.includes("대한통운"))
+    return { logoSrc: L("cj.png"), accent: "#EF151E", soft: "#FEF3F3" };
+  if (name.includes("데이트팝"))
+    return { logoSrc: L("datepop.png"), accent: "#00EAEB", soft: "#F2FEFE" };
+  if (name.includes("티켓링크"))
+    return { logoSrc: L("ticketlink.png"), accent: "#424242", soft: "#F5F5F5" };
+  if (name.includes("아파트너"))
+    return { logoSrc: L("aptner.png"), accent: "#277DEC", soft: "#F4F8FE" };
+  if (name.includes("데이블"))
+    return { logoSrc: L("dable.png"), accent: "#0971CE", soft: "#F2F8FC" };
+  if (name.includes("파트타임스터디"))
+    return { logoSrc: L("parttime_study.png"), accent: "#A476F3", soft: "#FAF8FE" };
+  if (name.includes("zoom"))
+    return { logoSrc: L("zoom.png"), accent: "#4085FE", soft: "#F5F9FF" };
+  if (name.includes("아이즈매거진"))
+    return { logoSrc: L("eyesmag.png"), accent: "#000000", soft: "#F2F2F2" };
+  if (name.includes("중고나라"))
+    return { logoSrc: L("joonggonara.png"), accent: "#0DCC5A", soft: "#F3FCF6" };
+  if (name.includes("vogue"))
+    return { logoSrc: L("vogue.png"), accent: "#000000", soft: "#F2F2F2" };
+  if (name.includes("elle"))
+    return { logoSrc: L("elle.png"), accent: "#000000", soft: "#F2F2F2" };
+  if (name.includes("무신사"))
+    return { logoSrc: L("musinsa.png"), accent: "#000000", soft: "#F2F2F2" };
+  if (name.includes("인베스팅닷컴"))
+    return { logoSrc: L("investing.png"), accent: "#FFA500", soft: "#FFFAF2" };
+  if (name.includes("프렌즈 스크린"))
+    return { logoSrc: L("friends_screen.png"), accent: "#FFCB05", soft: "#FFFCF2" };
+  if (name.includes("김캐디"))
+    return { logoSrc: L("kimcaddie.png"), accent: "#3FC2B0", soft: "#F5FCFB" };
+  if (name.includes("다나와"))
+    return { logoSrc: L("danawa.png"), accent: "#0BCF3F", soft: "#F3FCF5" };
+
+  if (name.includes("디지털 데일리"))
+    return { logoSrc: L("digital_daily.png"), accent: "#4C88CC", soft: "#FEFAF5" };
+  if (name.includes("지디넷코리아"))
+    return { logoSrc: L("zdnet.png"), accent: "#D0FF4B", soft: "#F2F2F2" };
+  if (name.includes("디지털 타임즈"))
+    return { logoSrc: L("digitaltimes.png"), accent: "#009EDB", soft: "#F2FAFD" };
+  if (name.includes("it비즈뉴스"))
+    return { logoSrc: L("itbiznews.png"), accent: "#0269AF", soft: "#F2F7FB" };
+  if (name.includes("캐드앤 그래픽스"))
+    return { logoSrc: L("cad_graphics.png"), accent: "#094FA3", soft: "#F2F6FA" };
+  if (name.includes("아이웨딩"))
+    return { logoSrc: L("iwedding.png"), accent: "#71BD5C", soft: "#F8FBF7" };
+  if (name.includes("호갱노노"))
+    return { logoSrc: L("hogangnono.png"), accent: "#554BDF", soft: "#F6F6FD" };
+  if (name.includes("직방"))
+    return { logoSrc: L("zigbang.png"), accent: "#FF681B", soft: "#FFF7F3" };
+  if (name.includes("머니투데이"))
+    return { logoSrc: L("moneytoday.png"), accent: "#F59C00", soft: "#FEFAF2" };
+  if (name.includes("매일경제신문"))
+    return { logoSrc: L("maekyung.png"), accent: "#FF6A00", soft: "#FFF7F2" };
+  if (name.includes("오렌지레터"))
+    return { logoSrc: L("orangeletter.png"), accent: "#F5731F", soft: "#FEF8F4" };
+  if (name.includes("캐릿"))
+    return { logoSrc: L("careet.png"), accent: "#FFAC00", soft: "#FFFBF2" };
+  if (name.includes("미라클레터"))
+    return { logoSrc: L("miracleletter.png"), accent: "#FA6D06", soft: "#FEF7F2" };
+  if (name.includes("캠핏"))
+    return { logoSrc: L("camfit.png"), accent: "#61D377", soft: "#F7FDF8" };
+  if (name.includes("위버스"))
+    return { logoSrc: L("weverse.png"), accent: "#000120", soft: "#F2F2F4" };
+  if (name.includes("카약"))
+    return { logoSrc: L("kayak.png"), accent: "#FF6A10", soft: "#FFF7F3" };
+  if (name.includes("놀이의 발견"))
+    return { logoSrc: L("nolbal.png"), accent: "#DC473E", soft: "#FDF6F5" };
+  if (name.includes("챌린저스"))
+    return { logoSrc: L("challengers.png"), accent: "#FC3E4A", soft: "#FFF5F6" };
+  if (name.includes("강남엄마"))
+    return { logoSrc: L("gangmom.png"), accent: "#EF3418", soft: "#FEF5F3" };
+  if (name.includes("nhn ace"))
+    return { logoSrc: L("nhn_ace.png"), accent: "#FA2828", soft: "#FEF4F4" };
+  if (name.includes("다윈"))
+    return { logoSrc: L("dawin.png"), accent: "#1B99F0", soft: "#F3FAFE" };
+  if (name.includes("홈쇼핑모아"))
+    return { logoSrc: L("homeshoppingmoa.png"), accent: "#EC5329", soft: "#FEF6F4" };
+  if (name.includes("포스텔러"))
+    return { logoSrc: L("forceteller.png"), accent: "#000000", soft: "#F2F2F2" };
+  if (name.includes("주말토리"))
+    return { logoSrc: L("joomaltory.png"), accent: "#FF6446", soft: "#FFF7F5" };
+  if (name.includes("l.point"))
+    return { logoSrc: L("lpoint.png"), accent: "#FB1822", soft: "#FFF3F4" };
+  if (name.includes("상용차 신문"))
+    return { logoSrc: L("cvinfo.png"), accent: "#CB5215", soft: "#FCF6F3" };
+  if (name.includes("wavve"))
+    return { logoSrc: L("wavve.png"), accent: "#0050FF", soft: "#F2F6FF" };
+  if (name.includes("메디게이트"))
+    return { logoSrc: L("medigate.png"), accent: "#39B2F9", soft: "#F5FBFE" };
+  if (name.includes("와이더플래닛"))
+    return { logoSrc: L("widerplanet.png"), accent: "#00A8E3", soft: "#F2FAFD" };
+  if (name.includes("우리동네 gs"))
+    return { logoSrc: L("ourhome_gs.png"), accent: "#00D4EA", soft: "#F2FDFE" };
+  if (name.includes("스마트빌"))
+    return { logoSrc: L("smartbill.png"), accent: "#174EB2", soft: "#F3F6FB" };
+  if (name.includes("mlb파크"))
+    return { logoSrc: L("mlbpark.png"), accent: "#FF6A00", soft: "#FFF7F2" };
+  if (name.includes("화해"))
+    return { logoSrc: L("hwahae.png"), accent: "#4BF0ED", soft: "#F6FEFE" };
+  if (name.includes("요즘것들"))
+    return { logoSrc: L("allforyoung.png"), accent: "#FF3469", soft: "#FFF5F7" };
+  if (name.includes("코워크"))
+    return { logoSrc: L("kowork.png"), accent: "#2C5AE9", soft: "#F4F6FE" };
+  if (name.includes("버디즈"))
+    return { logoSrc: L("buddies.png"), accent: "#532C97", soft: "#F6F4FA" };
+  if (name.includes("알럽코"))
+    return { logoSrc: L("iloveko.png"), accent: "#CF1A51", soft: "#FCF3F6" };
+  if (name.includes("appier"))
+    return { logoSrc: L("appier.png"), accent: "#2353B5", soft: "#F4F6FB" };
+  if (name.includes("스마트스코어"))
+    return { logoSrc: L("smartscore.png"), accent: "#0079FF", soft: "#F2F8FF" };
+  if (name.includes("스터디모아"))
+    return { logoSrc: L("studymoa.png"), accent: "#89BD39", soft: "#F9FBF5" };
+  if (name.includes("히로인스"))
+    return { logoSrc: L("heroines.png"), accent: "#5422BE", soft: "#FCFFF6" };
+  if (name.includes("랠리즈"))
+    return { logoSrc: L("rallyz.png"), accent: "#32C142", soft: "#F5F7FC" };
+  if (name.includes("훈장마을"))
+    return { logoSrc: L("hunjang.png"), accent: "#43A984", soft: "#F5FAF9" };
+  if (name.includes("대티즌"))
+    return { logoSrc: L("detizen.png"), accent: "#172146", soft: "#FEF4F5" };
+  if (name.includes("트립고잉"))
+    return { logoSrc: L("tripgoing.png"), accent: "#000000", soft: "#F2F2F2" };
+  if (name.includes("여행에미치다"))
+    return { logoSrc: L("travelholic.png"), accent: "#000000", soft: "#F2F2F2" };
+  if (name.includes("아파트아이"))
+    return { logoSrc: L("apti.png"), accent: "#2A5CFD", soft: "#F4F7FF" };
+  if (name.includes("닥터나우"))
+    return { logoSrc: L("doctornow.png"), accent: "#FF8E00", soft: "#FFF9F2" };
+  if (name.includes("아실"))
+    return { logoSrc: L("asil.png"), accent: "#1726FF", soft: "#F3F4FF" };
+  if (name.includes("애드픽"))
+    return { logoSrc: L("adpick.png"), accent: "#33EFC0", soft: "#F5FEFC" };
+  if (name.includes("김급식"))
+    return { logoSrc: L("kimgupsik.png"), accent: "#FF6C13", soft: "#FFF7F3" };
+  if (name.includes("캐시노트"))
+    return { logoSrc: L("cashnote.png"), accent: "#192D82", soft: "E8EAF3" };
+  if (name.includes("사람인"))
+    return { logoSrc: L("saramin.png"), accent: "#5C84F6", soft: "#EFF3FE" };
+  if (name.includes("samsung tv plus"))
+    return { logoSrc: L("samsungtv.png"), accent: "#00A1E5", soft: "#F2FAFD" };  
+
+
+
 
   return { Icon: Megaphone, accent: "#64748b", soft: "#f1f5f9" };
 }
