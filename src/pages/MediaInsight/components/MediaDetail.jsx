@@ -70,16 +70,18 @@ function StatSubSection({ avgCards, histPlots, emptyHistCount = 0 }) {
   );
 }
 
-function CoMediaCard({ node, onClick }) {
+function CoMediaCard({ node }) {
   const logoSrc = node.logo_src ?? null;
   const accent = node.accent ?? "#64748b";
   const soft = node.soft ?? "#f1f5f9";
+  const href = `/media-insight/${encodeURIComponent(node.media_id ?? node.id)}`;
   return (
-    <button
-      type="button"
+    <a
       className="co-media-card"
       style={{ "--media-accent": accent, "--media-soft": soft }}
-      onClick={onClick}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
     >
       <span className="co-media-card-top">
         <span className="media-card-icon">
@@ -93,7 +95,7 @@ function CoMediaCard({ node, onClick }) {
       </span>
       <span className="co-media-card-name">{node.id}</span>
       <span className="co-media-card-count">{node.count.toLocaleString()}건</span>
-    </button>
+    </a>
   );
 }
 
@@ -397,11 +399,6 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
                   <CoMediaCard
                     key={n.media_id ?? n.id}
                     node={n}
-                    onClick={() =>
-                      navigate(
-                        `/media-insight/${encodeURIComponent(n.media_id ?? n.id)}`,
-                      )
-                    }
                   />
                 ))}
               </div>

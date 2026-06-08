@@ -669,8 +669,12 @@
   border-right: 1px solid var(--border);
 }
 
-.cost-stat-item:first-child { padding-left: 0; }
-.cost-stat-item:last-child  { border-right: none; }
+.cost-stat-item:first-child {
+  padding-left: 0;
+}
+.cost-stat-item:last-child {
+  border-right: none;
+}
 
 .cost-stat-label {
   font-family: var(--font-body);
@@ -725,8 +729,6 @@
   margin: 3px 0 0;
 }
 
-
-
 /* ── subsection (단가 지표 / 효율 지표) ── */
 .ce-sub {
   margin: 0 20px 16px;
@@ -757,7 +759,8 @@
 }
 
 /* ── block (평균 / 분포) ── */
-.ce-block {}
+.ce-block {
+}
 
 .ce-block-hdr {
   padding: 7px 20px;
@@ -896,6 +899,7 @@
   font-family: var(--font-body);
   font-size: 1rem;
   color: var(--text);
+  text-decoration: none;
   transition:
     transform 0.18s ease,
     border-color 0.18s ease,
