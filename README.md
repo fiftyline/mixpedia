@@ -27,11 +27,11 @@ src/
 │   └── PrivateRoute.jsx  인증 가드 — localStorage token 검증, 미인증 시 /login 리디렉트
 │
 ├── layouts/
-│   ├── MainLayout.jsx    메인 레이아웃 — Sidebar + <Outlet>, BookmarkProvider 감싸기
+│   ├── MainLayout.jsx    메인 레이아웃 — Sidebar + <Outlet>, FolderProvider 감싸기
 │   └── SidebarLayout.jsx 사이드바 UI — 메뉴 그룹, 로그아웃, 활성 경로 하이라이트
 │
 ├── context/
-│   └── BookmarkContext.jsx 전역 북마크 상태 — 추가/삭제, 서버 동기화, useBookmark 훅 제공
+│   └── FolderContext.jsx 전역 폴더 상태 — 추가/삭제, 서버 동기화, useFolder 훅 제공
 │
 ├── utils/                 ★ 공통 유틸 (여러 페이지에서 import)
 │   ├── notify.js          Notyf 토스트 인스턴스 — notify.success / notify.error
@@ -64,7 +64,7 @@ Login/
 
 ## pages/MixSearch/
 
-미디어믹스 검색 및 북마크 기능
+미디어믹스 검색 및 폴더 기능
 
 ```
 MixSearch/
@@ -77,16 +77,16 @@ MixSearch/
 │
 ├── components/
 │   ├── SearchPanel.jsx       필터 UI — 매체, 업종, 성별, 연령 등 입력
-│   ├── MixTable.jsx          GridJS 결과 테이블 — 북마크 토글, 행 선택
+│   ├── MixTable.jsx          GridJS 결과 테이블 — 폴더 추가, 행 선택
 │   └── detail/
 │       ├── MixDetail.jsx     믹스 상세 — 예산 차트, 유사 믹스, 파일 링크
 │       ├── DonutChart.jsx    매체별 예산 도넛차트 (ECharts)
 │       ├── EditModal.jsx     수정 요청 모달
 │       └── MixMicroGrid.jsx  상세 집행내역 GridJS 테이블
 │
-└── MyBookmarks/
-    ├── index.jsx             북마크 목록 페이지 — CRUD, 선택, 분석 진입
-    └── BookmarkInsights.jsx  선택된 북마크 비교 분석 페이지
+└── MyFolders/
+    ├── index.jsx             폴더 목록 페이지 — CRUD, 선택, 분석 진입
+    └── FolderInsights.jsx    선택된 폴더 항목 비교 분석 페이지
 ```
 
 ---

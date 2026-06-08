@@ -31,9 +31,9 @@ export default function MediaInsightPage() {
       ) : (
         <>
           <div className="page-header">
-            <h1 className="page-title">매체 인사이트</h1>
+            <h1 className="page-title">Media Insight</h1>
             <p className="page-desc">
-              매체를 선택하여 사용 현황과 인사이트를 확인합니다.
+              미디어믹스 기반의 매체 인사이트를 확인합니다.
             </p>
           </div>
           <MediaTable onSelect={setSelectedMedia} />

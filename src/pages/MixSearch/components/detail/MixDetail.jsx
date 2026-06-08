@@ -3,14 +3,14 @@ import {
   ChevronLeft,
   ExternalLink,
   Pencil,
-  Bookmark,
-  BookmarkCheck,
+  Folder,
+  FolderCheck,
   Loader,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { endpoint } from "../../../../config/config";
-import { useBookmark } from "../../../../context/BookmarkContext";
+import { useFolder } from "../../../../context/FolderContext";
 import { toArr, fmtBudget, GENDER_LABEL } from "../../../../utils/mixUtils";
 import DonutChart from "./DonutChart";
 import EditModal from "./EditModal";
@@ -25,9 +25,9 @@ function pdfLabel(url) {
 }
 
 export default function MixDetail({ mix, onBack, onSelect }) {
-  const { bookmarkedIds, pendingIds, toggleBookmark } = useBookmark();
+  const { folderIds, pendingIds, toggleFolder } = useFolder();
   const bmId = Number(mix.file_id);
-  const isBookmarked = bookmarkedIds.has(bmId);
+  const isInFolder = folderIds.has(bmId);
   const isPending = pendingIds.has(bmId);
 
   const [editOpen, setEditOpen] = useState(false);
@@ -96,18 +96,18 @@ export default function MixDetail({ mix, onBack, onSelect }) {
       <div className="mix-hero">
         <div className="mix-hero-actions">
           <button
-            className={`mix-bookmark-btn${isBookmarked ? " mix-bookmark-btn--on" : ""}${isPending ? " mix-bookmark-btn--pending" : ""}`}
-            onClick={() => toggleBookmark(mix.file_id)}
+            className={`mix-folder-btn${isInFolder ? " mix-folder-btn--on" : ""}${isPending ? " mix-folder-btn--pending" : ""}`}
+            onClick={() => toggleFolder(mix.file_id)}
             disabled={isPending}
           >
             {isPending ? (
               <Loader size={13} strokeWidth={2} className="bm-spin" />
-            ) : isBookmarked ? (
-              <BookmarkCheck size={13} strokeWidth={2} />
+            ) : isInFolder ? (
+              <FolderCheck size={13} strokeWidth={2} />
             ) : (
-              <Bookmark size={13} strokeWidth={2} />
+              <Folder size={13} strokeWidth={2} />
             )}
-            {isPending ? "처리 중..." : isBookmarked ? "북마크됨" : "북마크"}
+            {isPending ? "처리 중..." : isInFolder ? "폴더에 있음" : "폴더"}
           </button>
           <button
             className="mix-edit-req-btn"
@@ -230,16 +230,16 @@ export default function MixDetail({ mix, onBack, onSelect }) {
           <div className="similar-grid">
             {similarMixes.map((item, i) => {
               const cardId = Number(item.file_id);
-              const cardBm = bookmarkedIds.has(cardId);
+              const cardInFolder = folderIds.has(cardId);
               return (
                 <div
                   key={i}
                   className="similar-card"
                   onClick={() => onSelect?.(item)}
                 >
-                  {cardBm && (
+                  {cardInFolder && (
                     <span className="similar-card-bm">
-                      <BookmarkCheck size={13} strokeWidth={2} />
+                      <FolderCheck size={13} strokeWidth={2} />
                     </span>
                   )}
                   <div className="similar-card-name">{item.file_path || "-"}</div>

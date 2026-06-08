@@ -2,14 +2,14 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { RefreshCw, Trash2 } from "lucide-react";
 import axios from "axios";
 import { endpoint } from "../../../config/config";
-import { useBookmark } from "../../../context/BookmarkContext";
+import { useFolder } from "../../../context/FolderContext";
 import MixTable from "../components/MixTable";
 import MixDetail from "../components/detail/MixDetail";
-import BookmarkInsights from "./BookmarkInsights";
+import FolderInsights from "./FolderInsights";
 import "../styles.css";
 
-export default function MyBookmarksPage() {
-  const { bookmarkedIds, bulkBookmark } = useBookmark();
+export default function MyFoldersPage() {
+  const { folderIds, bulkFolder } = useFolder();
   const [selectedMix, setSelectedMix] = useState(null);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function MyBookmarksPage() {
   const [showInsights, setShowInsights] = useState(false);
   const [insightIds, setInsightIds] = useState([]);
 
-  const fetchBookmarks = useCallback(() => {
+  const fetchFolders = useCallback(() => {
     setLoading(true);
     setError(null);
     axios
@@ -30,32 +30,31 @@ export default function MyBookmarksPage() {
   }, []);
 
   useEffect(() => {
-    fetchBookmarks();
-  }, [fetchBookmarks]);
+    fetchFolders();
+  }, [fetchFolders]);
 
-  // bookmarkedIds가 변하면 (해제 등) 자동 새로고침
   const isFirstRender = useRef(true);
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    fetchBookmarks();
-  }, [bookmarkedIds, fetchBookmarks]);
+    fetchFolders();
+  }, [folderIds, fetchFolders]);
 
   const handleReset = async () => {
-    if (!bookmarkedIds.size) return;
+    if (!folderIds.size) return;
     setResetting(true);
-    await bulkBookmark([...bookmarkedIds], "remove");
+    await bulkFolder([...folderIds], "remove");
     setConfirmReset(false);
     setResetting(false);
-    fetchBookmarks();
+    fetchFolders();
   };
 
   if (showInsights) {
     return (
       <section className="mix-search-page">
-        <BookmarkInsights
+        <FolderInsights
           mixIds={insightIds}
           onBack={() => setShowInsights(false)}
         />
@@ -80,7 +79,7 @@ export default function MyBookmarksPage() {
       <div className="page-header">
         <h1 className="page-title">내 폴더</h1>
         <p className="page-desc">
-          폴더 목록을 확인하고, 미디어믹스들을 분석합니다.
+          폴더에 담은 미디어 믹스를 확인하고 분석합니다.
         </p>
       </div>
 
@@ -89,7 +88,7 @@ export default function MyBookmarksPage() {
           className="bm-action-btn"
           onClick={() => {
             setConfirmReset(false);
-            fetchBookmarks();
+            fetchFolders();
           }}
           disabled={loading}
         >
@@ -118,9 +117,9 @@ export default function MyBookmarksPage() {
           <div className="bm-modal" onClick={(e) => e.stopPropagation()}>
             <div className="bm-modal-title">폴더 초기화</div>
             <p className="bm-modal-body">
-              폴더 <strong>{bookmarkedIds.size}건</strong>을 모두 초기화
-              하시겠습니까?
-              <br />이 작업은 되돌릴 수 없습니다.
+              폴더 <strong>{folderIds.size}건</strong>을 모두 초기화하시겠습니까?
+              <br />
+              이 작업은 되돌릴 수 없습니다.
             </p>
             <div className="bm-modal-footer">
               <button

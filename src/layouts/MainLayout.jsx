@@ -1,16 +1,16 @@
 import { Outlet } from 'react-router-dom';
 import SidebarLayout from './SidebarLayout';
-import { BookmarkProvider } from '../context/BookmarkContext';
+import { FolderProvider } from '../context/FolderContext';
 
 export default function MainLayout() {
   return (
-    <BookmarkProvider>
+    <FolderProvider>
       <div className="app-layout">
         <SidebarLayout />
         <main className="main-layout">
           <Outlet />
         </main>
       </div>
-    </BookmarkProvider>
+    </FolderProvider>
   );
 }

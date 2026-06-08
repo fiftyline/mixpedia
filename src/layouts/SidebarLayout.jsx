@@ -1,6 +1,6 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
-const MIX_PATHS = ['/mix-search', '/my-bookmarks'];
+const MIX_PATHS = ['/mix-search', '/my-folders', '/my-bookmarks'];
 const MMM_PATHS = ['/mmm/create', '/mmm/my-mmm'];
 
 export default function SidebarLayout() {
@@ -26,7 +26,7 @@ export default function SidebarLayout() {
 
       <nav className="sidebar-nav">
         <NavLink to="/media-insight" className="sidebar-link">
-          Media
+          Media Insight
         </NavLink>
 
         {/* Media Mix group */}
@@ -37,7 +37,7 @@ export default function SidebarLayout() {
           <NavLink to="/mix-search" className="sidebar-sublink">
             Media Mix 조회
           </NavLink>
-          <NavLink to="/my-bookmarks" className="sidebar-sublink">
+          <NavLink to="/my-folders" className="sidebar-sublink">
             내 폴더
           </NavLink>
         </div>

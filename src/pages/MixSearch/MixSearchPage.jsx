@@ -36,8 +36,8 @@ export default function MixSearchPage() {
   return (
     <section className="mix-search-page">
       <div className="page-header">
-        <h1 className="page-title">미디어믹스 조회</h1>
-        <p className="page-desc">캠페인들의 미디어믹스를 조회합니다.</p>
+        <h1 className="page-title">Media Mix</h1>
+        <p className="page-desc">집행된 캠페인들의 미디어믹스를 조회합니다.</p>
       </div>
 
       <SearchPanel

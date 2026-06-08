@@ -278,7 +278,7 @@ function Section({ title, badge, children, full }) {
 }
 
 /* ── 메인 컴포넌트 ── */
-export default function BookmarkInsights({ mixIds, onBack }) {
+export default function FolderInsights({ mixIds, onBack }) {
   const [{ data, loading, error }, dispatch] = useReducer(reducer, {
     data: null,
     loading: true,

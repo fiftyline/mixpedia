@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Grid, html } from "gridjs";
 import "gridjs/dist/theme/mermaid.min.css";
-import { BookmarkPlus, BarChart2 } from "lucide-react";
+import { FolderPlus, BarChart2 } from "lucide-react";
 import { toArr, GENDER_LABEL } from "../../../utils/mixUtils";
-import { useBookmark } from "../../../context/BookmarkContext";
+import { useFolder } from "../../../context/FolderContext";
 import { notify } from "../../../utils/notify";
 import MixInlineDetail from "./detail/MixInlineDetail";
 
@@ -37,7 +37,7 @@ export default function ResultTable({
   selectedMix,
   selectedRowId,
 }) {
-  const { pendingIds, bulkBookmark } = useBookmark();
+  const { pendingIds, bulkFolder } = useFolder();
   const containerRef = useRef(null);
   const gridRef = useRef(null);
   const resultsRef = useRef(results);
@@ -278,11 +278,11 @@ export default function ResultTable({
                       notify.error("믹스를 선택해주세요.");
                       return;
                     }
-                    bulkBookmark(selIds, "add");
+                    bulkFolder(selIds, "add");
                   }}
                 >
-                  <BookmarkPlus size={13} />
-                  북마크 추가
+                  <FolderPlus size={13} />
+                  폴더 추가
                 </button>
               )}
               {onAnalyze && (
@@ -297,7 +297,7 @@ export default function ResultTable({
                   }}
                 >
                   <BarChart2 size={13} />
-                  북마크 분석하기
+                  폴더 분석하기
                 </button>
               )}
             </>

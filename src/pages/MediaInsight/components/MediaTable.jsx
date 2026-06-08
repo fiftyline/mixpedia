@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { endpoint } from "../../../config/config";
+import MultiSelect from "../../../components/MultiSelect";
 import { getMediaPresentation } from "../utils/mediaPresentation";
 
 const fetchMediaMacro = () =>
@@ -25,7 +26,7 @@ function getIndustries(item) {
 export default function MediaTable({ onSelect }) {
   const sentinelRef = useRef(null);
   const [filterMedia, setFilterMedia] = useState("");
-  const [filterIndustry, setFilterIndustry] = useState("");
+  const [filterIndustry, setFilterIndustry] = useState([]);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const {
@@ -49,7 +50,9 @@ export default function MediaTable({ onSelect }) {
         });
       }
     });
-    return [...set].sort((a, b) => a.localeCompare(b));
+    return [...set]
+      .sort((a, b) => a.localeCompare(b))
+      .map((industry) => ({ label: industry, value: industry }));
   }, [allData]);
 
   const filteredData = useMemo(() => {
@@ -62,11 +65,12 @@ export default function MediaTable({ onSelect }) {
           .includes(query)
       )
         return false;
-      if (filterIndustry) {
+      if (filterIndustry.length > 0) {
         const inds = Array.isArray(item.top_inds)
           ? item.top_inds.map((i) => i.industry)
           : [];
-        if (!inds.includes(filterIndustry)) return false;
+        if (!filterIndustry.some((industry) => inds.includes(industry)))
+          return false;
       }
       return true;
     });
@@ -90,7 +94,7 @@ export default function MediaTable({ onSelect }) {
   }, [filteredData.length, visibleCount]);
 
   const visibleData = filteredData.slice(0, visibleCount);
-  const isFiltered = filterMedia.trim().length > 0 || filterIndustry !== "";
+  const isFiltered = filterMedia.trim().length > 0 || filterIndustry.length > 0;
 
   return (
     <div className="media-table-wrap">
@@ -105,7 +109,7 @@ export default function MediaTable({ onSelect }) {
 
       <div className="media-table-filter">
         <div className="mtf-item">
-          <label className="mtf-label">매체</label>
+          {/* <label className="mtf-label">매체</label> */}
           <input
             className="mtf-input"
             type="text"
@@ -117,23 +121,21 @@ export default function MediaTable({ onSelect }) {
             }}
           />
         </div>
-        <div className="mtf-item">
-          <label className="mtf-label">업종</label>
-          <select
-            className="mtf-input"
+        <div
+          className={`mtf-item mtf-item--industry${
+            filterIndustry.length > 0 ? " mtf-item--has-selection" : ""
+          }`}
+        >
+          {/* <label className="mtf-label">업종</label> */}
+          <MultiSelect
+            options={allIndustries}
             value={filterIndustry}
-            onChange={(e) => {
-              setFilterIndustry(e.target.value);
+            onChange={(value) => {
+              setFilterIndustry(value);
               setVisibleCount(PAGE_SIZE);
             }}
-          >
-            <option value="">전체</option>
-            {allIndustries.map((ind) => (
-              <option key={ind} value={ind}>
-                {ind}
-              </option>
-            ))}
-          </select>
+            placeholder="업종 선택"
+          />
         </div>
         {isFiltered && (
           <button
@@ -141,7 +143,7 @@ export default function MediaTable({ onSelect }) {
             type="button"
             onClick={() => {
               setFilterMedia("");
-              setFilterIndustry("");
+              setFilterIndustry([]);
               setVisibleCount(PAGE_SIZE);
             }}
           >

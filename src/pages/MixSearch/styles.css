@@ -432,7 +432,7 @@
   }
 }
 
-/* ── Bookmark insights KPI ── */
+/* ── Folder insights KPI ── */
 .bm-insight-summary {
   display: flex;
   gap: 16px;
@@ -472,7 +472,7 @@
   letter-spacing: -0.01em;
 }
 
-/* ── Bookmark page actions ── */
+/* ── Folder page actions ── */
 .bm-page-actions {
   display: flex;
   align-items: center;
@@ -834,7 +834,7 @@
   padding: 1px 8px;
 }
 
-/* ── 일괄 북마크 버튼 ── */
+/* ── 일괄 폴더 버튼 ── */
 .bulk-bm-btn {
   display: inline-flex;
   align-items: center;
@@ -902,7 +902,7 @@
   gap: 8px;
 }
 
-.mix-bookmark-btn {
+.mix-folder-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -920,20 +920,20 @@
   box-shadow: var(--shadow-sm);
 }
 
-.mix-bookmark-btn:hover {
+.mix-folder-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
   background: var(--bg);
 }
 
-.mix-bookmark-btn--on {
+.mix-folder-btn--on {
   border-color: #c7d2fe;
   background: var(--accent-muted);
   color: var(--accent);
 }
 
-.mix-bookmark-btn--pending,
-.mix-bookmark-btn:disabled {
+.mix-folder-btn--pending,
+.mix-folder-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   box-shadow: none;
@@ -1538,7 +1538,7 @@
   display: block;
 }
 
-/* ── Bookmark button (gridjs 내부) ── */
+/* ── Folder button (gridjs 내부) ── */
 .bm-btn {
   display: inline-flex;
   align-items: center;
