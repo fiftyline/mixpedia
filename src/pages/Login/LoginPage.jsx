@@ -24,7 +24,7 @@ export default function LoginPage() {
       });
       localStorage.setItem("token", res.data.access_token);
       localStorage.setItem("user_id", userId);
-      navigate("/mix-search", { replace: true });
+      navigate("/media-insight", { replace: true });
     } catch (err) {
       const msg =
         err.response?.data?.detail ||

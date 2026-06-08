@@ -290,59 +290,6 @@
   color: var(--text-tertiary);
 }
 
-/* ── Rank List ── */
-.rank-list {
-  padding: 14px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.rank-row {
-  display: grid;
-  grid-template-columns: 90px 1fr 48px;
-  align-items: center;
-  gap: 10px;
-}
-
-.rank-label {
-  font-size: 0.775rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.rank-bar-wrap {
-  height: 6px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  overflow: hidden;
-}
-
-.rank-bar {
-  height: 100%;
-  transition: width 0.3s ease;
-}
-
-.rank-bar--target {
-  background: var(--accent);
-  opacity: 0.7;
-}
-
-.rank-bar--ind {
-  background: var(--text-secondary);
-  opacity: 0.4;
-}
-
-.rank-count {
-  font-family: var(--font-data);
-  font-size: 0.72rem;
-  color: var(--text-tertiary);
-  text-align: right;
-}
-
 .rank-empty {
   padding: 32px;
   text-align: center;
@@ -704,4 +651,283 @@
 .mix-hero-name {
   display: flex;
   align-items: center;
+}
+
+/* ── Cost / Efficiency Stats ── */
+.cost-stat-row {
+  display: flex;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cost-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 20px;
+  border-right: 1px solid var(--border);
+}
+
+.cost-stat-item:first-child { padding-left: 0; }
+.cost-stat-item:last-child  { border-right: none; }
+
+.cost-stat-label {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.cost-stat-value {
+  font-family: var(--font-headline);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1;
+}
+
+.cost-stat-unit {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+/* ══ 단가 및 효율 구조 ══ */
+.section--bare {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  padding-bottom: 20px;
+}
+
+.ce-section-heading {
+  padding: 16px 20px 4px;
+}
+
+.ce-section-title {
+  font-family: var(--font-headline);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.ce-section-sub {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 3px 0 0;
+}
+
+
+
+/* ── subsection (단가 지표 / 효율 지표) ── */
+.ce-sub {
+  margin: 0 20px 16px;
+}
+
+.ce-sub-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 20px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--border);
+}
+
+.ce-sub-title {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ce-sub-badge {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+}
+
+/* ── block (평균 / 분포) ── */
+.ce-block {}
+
+.ce-block-hdr {
+  padding: 7px 20px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.ce-block-title {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── 평균 영역: 2열 그리드, 1열만 사용 ── */
+.ce-avg-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 80px;
+  background: var(--surface-raised);
+}
+
+.ce-avg-col {
+  padding: 14px 18px;
+}
+
+/* 1열 내 3카드 수평 배치 */
+.ce-avg-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ce-avg-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.ce-avg-number {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.ce-avg-card--empty {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* ── 히스토그램: 3열, 각 셀이 섹션 ── */
+.ce-hist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px;
+}
+
+.ce-hist-plot {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ce-hist-plot--empty {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.ce-hist-plot-hdr {
+  padding: 9px 14px;
+  background: #e4e8f4;
+  border-bottom: 1px solid var(--border);
+}
+
+.media-detail .section-hdr {
+  background: #e4e8f4;
+}
+
+.ce-hist-plot-label {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ce-hist-plot-body {
+  padding: 6px 8px 4px;
+}
+
+/* ── 미디어 디테일 insight-grid: 4열 ── */
+.media-detail .insight-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.section--span2 {
+  grid-column: span 2;
+}
+
+.demo-target-chart {
+  padding: 8px 12px 12px;
+}
+
+/* ── 함께 사용된 매체 카드 그리드 ── */
+.co-media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.co-media-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.co-media-card:hover {
+  border-color: var(--media-accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.co-media-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.co-media-card-name {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  word-break: break-word;
+  margin-bottom: 4px;
+}
+
+.co-media-card-count {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }

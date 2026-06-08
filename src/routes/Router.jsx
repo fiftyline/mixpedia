@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import MixSearchPage from "../pages/MixSearch";
-import MediaInsightPage from "../pages/MediaInsight";
+import MediaInsightPage, { MediaInsightDetailPage } from "../pages/MediaInsight";
 import MyBookmarksPage from "../pages/MixSearch/MyBookmarks";
 import MmmCreatePage from "../pages/MarketingMixModel/MmmCreatePage";
 import MmmMyModelsPage from "../pages/MarketingMixModel/MmmMyModelsPage";
@@ -17,11 +17,12 @@ export default function Router() {
         <Route path="/login" element={<LoginPage />} />
         <Route element={<PrivateRoute />}>
           <Route element={<MainLayout />}>
-            <Route path="/" element={<Navigate to="/mix-search" replace />} />
+            <Route path="/" element={<Navigate to="/media-insight" replace />} />
             <Route path="/mix-search" element={<MixSearchPage />} />
             <Route path="/mix-search/detail/:file_id" element={<MixDetailPage />} />
             <Route path="/my-bookmarks" element={<MyBookmarksPage />} />
             <Route path="/media-insight" element={<MediaInsightPage />} />
+            <Route path="/media-insight/:mediaId" element={<MediaInsightDetailPage />} />
             <Route path="/mmm/create" element={<MmmCreatePage />} />
             <Route path="/mmm/my-mmm" element={<MmmMyModelsPage />} />
             <Route path="/mmm/my-mmm/:model_id" element={<MmmDetailPage />} />

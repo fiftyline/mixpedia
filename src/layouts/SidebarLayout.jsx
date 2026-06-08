@@ -18,10 +18,10 @@ export default function SidebarLayout() {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <div className="logo-section">
+        <NavLink to="/" className="logo-section" style={{ textDecoration: 'none' }}>
           <img src="/static/logo-main/logo.svg" alt="Mixpedia" className="sidebar-logo" />
           <span className="logo-text">MIXPEDIA</span>
-        </div>
+        </NavLink>
       </div>
 
       <nav className="sidebar-nav">

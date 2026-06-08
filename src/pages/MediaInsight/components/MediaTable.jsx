@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
+import { ArrowUpRight, Megaphone } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { endpoint } from "../../../config/config";
-import { getMediaPresentation } from "../utils/mediaPresentation";
 
 const fetchMediaMacro = () =>
   axios
@@ -22,7 +21,8 @@ function getIndustries(item) {
     : [];
 }
 
-export default function MediaTable({ onSelect }) {
+export default function MediaTable() {
+  const navigate = useNavigate();
   const sentinelRef = useRef(null);
   const [filterMedia, setFilterMedia] = useState("");
   const [filterIndustry, setFilterIndustry] = useState("");
@@ -165,8 +165,9 @@ export default function MediaTable({ onSelect }) {
         <>
           <div className="media-card-grid">
             {visibleData.map((item) => {
-              const { Icon, brandIcon, letterIcon, logoSrc, accent, soft } =
-                getMediaPresentation(item.media);
+              const logo_src = item.logo_src ?? null;
+              const accent = item.accent ?? "#64748b";
+              const soft = item.soft ?? "#f1f5f9";
               const industries = getIndustries(item);
 
               return (
@@ -175,20 +176,19 @@ export default function MediaTable({ onSelect }) {
                   className="media-card"
                   type="button"
                   style={{ "--media-accent": accent, "--media-soft": soft }}
-                  onClick={() => onSelect?.(item)}
+                  onClick={() =>
+                    navigate(
+                      `/media-insight/${encodeURIComponent(item.media_id ?? item.media)}`,
+                      { state: { media: item } },
+                    )
+                  }
                 >
                   <span className="media-card-top">
                     <span className="media-card-icon">
-                      {logoSrc ? (
-                        <img src={logoSrc} alt="" className="media-card-logo" />
-                      ) : brandIcon ? (
-                        <FontAwesomeIcon icon={brandIcon} />
-                      ) : letterIcon ? (
-                        <span className="media-card-letter-icon">
-                          {letterIcon}
-                        </span>
+                      {logo_src ? (
+                        <img src={logo_src} alt="" className="media-card-logo" />
                       ) : (
-                        <Icon size={18} strokeWidth={2} />
+                        <Megaphone size={18} strokeWidth={2} />
                       )}
                     </span>
                     <ArrowUpRight
