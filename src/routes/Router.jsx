@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import MixSearchPage from "../pages/MixSearch";
 import MediaInsightPage, { MediaInsightDetailPage } from "../pages/MediaInsight";
-import MyBookmarksPage from "../pages/MixSearch/MyBookmarks";
+import MyFolderPage from "../pages/MixSearch/MyFolder";
 import MmmCreatePage from "../pages/MarketingMixModel/MmmCreatePage";
 import MmmMyModelsPage from "../pages/MarketingMixModel/MmmMyModelsPage";
 import MmmDetailPage from "../pages/MarketingMixModel/MmmDetailPage";
@@ -20,7 +20,7 @@ export default function Router() {
             <Route path="/" element={<Navigate to="/media-insight" replace />} />
             <Route path="/mix-search" element={<MixSearchPage />} />
             <Route path="/mix-search/detail/:file_id" element={<MixDetailPage />} />
-            <Route path="/my-bookmarks" element={<MyBookmarksPage />} />
+            <Route path="/my-folder" element={<MyFolderPage />} />
             <Route path="/media-insight" element={<MediaInsightPage />} />
             <Route path="/media-insight/:mediaId" element={<MediaInsightDetailPage />} />
             <Route path="/mmm/create" element={<MmmCreatePage />} />

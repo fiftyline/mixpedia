@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
-import { Pencil, BookmarkCheck, SquareArrowOutUpRight, FileSpreadsheet } from "lucide-react";
+import { Pencil, SquareArrowOutUpRight, FileSpreadsheet } from "lucide-react";
 import { toArr, fmtBudget } from "../../../../utils/mixUtils";
-import { useBookmark } from "../../../../context/BookmarkContext";
 import EditModal from "./EditModal";
 import MixMicroGrid from "./MixMicroGrid";
 
@@ -16,7 +15,6 @@ function openMixDetail(item) {
 }
 
 export default function MixInlineDetail({ mix }) {
-  const { bookmarkedIds } = useBookmark();
   const [editOpen, setEditOpen] = useState(false);
 
   const microItems = useMemo(

@@ -247,7 +247,7 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
           <div className="section section--full section--bare">
             <div className="ce-section-heading">
               <p className="ce-section-title">단가 및 효율</p>
-              <p className="ce-section-sub">미디어믹스 기준</p>
+              <p className="ce-section-sub">미디어믹스내 GROSS, MARKET COST 기준</p>
             </div>
             <br />
 
@@ -282,8 +282,8 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
             <StatSubSection
               emptyHistCount={1}
               avgCards={[
-                { key: "ctr", label: "CTR", fmt: (v) => Number(v).toFixed(2) },
-                { key: "vtr", label: "VTR", fmt: (v) => Number(v).toFixed(2) },
+                { key: "ctr", label: "E.CTR", fmt: (v) => Number(v).toFixed(2) },
+                { key: "vtr", label: "E.VTR", fmt: (v) => Number(v).toFixed(2) },
               ].map(({ key, label, fmt }) => (
                 <AvgCard
                   key={key}
@@ -293,8 +293,8 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
                 />
               ))}
               histPlots={[
-                { key: "ctr", label: "CTR" },
-                { key: "vtr", label: "VTR" },
+                { key: "ctr", label: "E.CTR" },
+                { key: "vtr", label: "E.VTR" },
               ].map(({ key, label }) => (
                 <HistPlot
                   key={key}
@@ -309,7 +309,7 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
           <div className="section section--full section--bare">
             <div className="ce-section-heading">
               <p className="ce-section-title">예산 분배</p>
-              <p className="ce-section-sub">미디어믹스 기준</p>
+              <p className="ce-section-sub">미디어믹스내 GROSS, MARKET COST 기준</p>
             </div>
 
             <StatSubSection

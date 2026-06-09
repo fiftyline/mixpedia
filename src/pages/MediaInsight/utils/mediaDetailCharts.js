@@ -21,9 +21,13 @@ export function buildHistOption(key, stats, unit = "") {
   const isPct = key === "ctr" || key === "vtr";
   const isRat = key === "budget_rat";
 
+  const step = edges.length >= 2 ? Math.abs(edges[1] - edges[0]) : 1;
+  const smartDec = (s) => (s > 0 ? Math.max(0, Math.ceil(-Math.log10(s))) : 2);
+
   const edgeFmt = (val) => {
-    if (isRat) return `${(val * 100).toFixed(0)}%`;
-    return `${fmtEdge(val, isPct)}${isPct ? "" : unit}`;
+    if (isRat) return `${(val * 100).toFixed(smartDec(step * 100))}%`;
+    if (isPct) return `${Number(val).toFixed(smartDec(step))}%`;
+    return `${fmtEdge(val, false)}${unit}`;
   };
 
   const labels = counts.map(

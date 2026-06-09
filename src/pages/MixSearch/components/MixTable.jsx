@@ -2,11 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Grid, html } from "gridjs";
 import "gridjs/dist/theme/mermaid.min.css";
-import { BookmarkPlus, BarChart2 } from "lucide-react";
+import { FolderPlus, BarChart2, Trash2 } from "lucide-react";
 import { toArr, GENDER_LABEL } from "../../../utils/mixUtils";
-import { useBookmark } from "../../../context/BookmarkContext";
 import { notify } from "../../../utils/notify";
 import MixInlineDetail from "./detail/MixInlineDetail";
+import FolderModal from "./FolderModal";
 
 function renderTags(arr, cls) {
   if (!arr.length)
@@ -33,11 +33,11 @@ export default function ResultTable({
   results,
   onSelect,
   onAnalyze,
+  onRemove,
   hideAdd,
   selectedMix,
   selectedRowId,
 }) {
-  const { pendingIds, bulkBookmark } = useBookmark();
   const containerRef = useRef(null);
   const gridRef = useRef(null);
   const resultsRef = useRef(results);
@@ -45,6 +45,8 @@ export default function ResultTable({
   const selectedIdsRef = useRef(new Set());
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [detailHost, setDetailHost] = useState(null);
+  const [folderModalOpen, setFolderModalOpen] = useState(false);
+  const [pendingFolderIds, setPendingFolderIds] = useState([]);
 
   useEffect(() => { resultsRef.current = results; }, [results]);
   useEffect(() => { onSelectRef.current = onSelect; }, [onSelect]);
@@ -261,7 +263,6 @@ export default function ResultTable({
         <span className="result-hint">클릭 시, 상세 내용을 확인할 수 있습니다.</span>
         {(() => {
           const selIds = [...selectedIds];
-          const isBusy = selIds.some((id) => pendingIds.has(id));
           return (
             <>
               {selectedIds.size > 0 && (
@@ -272,17 +273,32 @@ export default function ResultTable({
               {!hideAdd && (
                 <button
                   className="bulk-bm-btn"
-                  disabled={isBusy}
                   onClick={() => {
                     if (!selIds.length) {
                       notify.error("믹스를 선택해주세요.");
                       return;
                     }
-                    bulkBookmark(selIds, "add");
+                    setPendingFolderIds(selIds);
+                    setFolderModalOpen(true);
                   }}
                 >
-                  <BookmarkPlus size={13} />
-                  북마크 추가
+                  <FolderPlus size={13} />
+                  폴더 추가
+                </button>
+              )}
+              {onRemove && (
+                <button
+                  className="bulk-bm-btn bulk-bm-btn--danger"
+                  onClick={() => {
+                    if (!selIds.length) {
+                      notify.error("믹스를 선택해주세요.");
+                      return;
+                    }
+                    onRemove(selIds);
+                  }}
+                >
+                  <Trash2 size={13} />
+                  폴더에서 제거
                 </button>
               )}
               {onAnalyze && (
@@ -297,7 +313,7 @@ export default function ResultTable({
                   }}
                 >
                   <BarChart2 size={13} />
-                  북마크 분석하기
+                  폴더 분석하기
                 </button>
               )}
             </>
@@ -311,6 +327,20 @@ export default function ResultTable({
       {detailHost &&
         selectedMix &&
         createPortal(<MixInlineDetail mix={selectedMix} />, detailHost)}
+      {folderModalOpen && (
+        <FolderModal
+          mixIds={pendingFolderIds}
+          onClose={() => setFolderModalOpen(false)}
+          onSuccess={() => {
+            notify.success(`${pendingFolderIds.length}건이 폴더에 추가되었습니다.`);
+            selectedIdsRef.current.clear();
+            setSelectedIds(new Set());
+            containerRef.current?.querySelectorAll(".cb-row").forEach((cb) => { cb.checked = false; });
+            const headerCb = containerRef.current?.querySelector(".cb-all");
+            if (headerCb) { headerCb.checked = false; headerCb.indeterminate = false; }
+          }}
+        />
+      )}
     </div>
   );
 }

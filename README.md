@@ -31,7 +31,7 @@ src/
 │   └── SidebarLayout.jsx 사이드바 UI — 메뉴 그룹, 로그아웃, 활성 경로 하이라이트
 │
 ├── context/
-│   └── BookmarkContext.jsx 전역 북마크 상태 — 추가/삭제, 서버 동기화, useBookmark 훅 제공
+│   └── BookmarkContext.jsx 전역 폴더/북마크 상태 — 폴더 목록·bookmarkedIds 제공, useBookmark 훅
 │
 ├── utils/                 ★ 공통 유틸 (여러 페이지에서 import)
 │   ├── notify.js          Notyf 토스트 인스턴스 — notify.success / notify.error
@@ -64,12 +64,13 @@ Login/
 
 ## pages/MixSearch/
 
-미디어믹스 검색 및 북마크 기능
+미디어믹스 검색 및 폴더 관리 기능
 
 ```
 MixSearch/
 ├── index.jsx                진입점 — MixSearchPage 재export
 ├── MixSearchPage.jsx        메인 페이지 — 필터 + 테이블 + 상세 조회 조합
+├── MixDetailPage.jsx        믹스 상세 전용 페이지 (/mix-search/detail/:file_id)
 ├── styles.css               MixSearch 전용 스타일
 │
 ├── hooks/
@@ -77,16 +78,21 @@ MixSearch/
 │
 ├── components/
 │   ├── SearchPanel.jsx       필터 UI — 매체, 업종, 성별, 연령 등 입력
-│   ├── MixTable.jsx          GridJS 결과 테이블 — 북마크 토글, 행 선택
+│   ├── MixTable.jsx          GridJS 결과 테이블 — 행 선택, 폴더 추가, 분석 진입
+│   ├── FolderModal.jsx       폴더 추가 모달 — 기존 폴더 선택 또는 새 폴더 생성
 │   └── detail/
-│       ├── MixDetail.jsx     믹스 상세 — 예산 차트, 유사 믹스, 파일 링크
-│       ├── DonutChart.jsx    매체별 예산 도넛차트 (ECharts)
-│       ├── EditModal.jsx     수정 요청 모달
-│       └── MixMicroGrid.jsx  상세 집행내역 GridJS 테이블
+│       ├── MixDetail.jsx       믹스 상세 — 예산 차트, 유사 믹스, 파일 링크, 폴더 추가
+│       ├── MixInlineDetail.jsx 인라인 펼침 상세 — 테이블 행 클릭 시 확장
+│       ├── DonutChart.jsx      매체별 예산 도넛차트 (ECharts)
+│       ├── EditModal.jsx       수정 요청 모달
+│       └── MixMicroGrid.jsx    상세 집행내역 GridJS 테이블
 │
-└── MyBookmarks/
-    ├── index.jsx             북마크 목록 페이지 — CRUD, 선택, 분석 진입
-    └── BookmarkInsights.jsx  선택된 북마크 비교 분석 페이지
+└── MyFolder/
+    ├── index.jsx               내 폴더 페이지 — 폴더 목록·상세·분석 진입
+    ├── CreateFolderModal.jsx   새 폴더 생성 모달 (POST /bookmark/create)
+    ├── FolderNameEditor.jsx    폴더 이름 인라인 편집 (POST /bookmark/edit)
+    ├── FolderInsights.jsx      폴더 분석 페이지 — 예산·업종·매체·네트워크 차트
+    └── folderInsightCharts.js  FolderInsights 차트 옵션 빌더 모음
 ```
 
 ---
@@ -97,13 +103,17 @@ MixSearch/
 
 ```
 MediaInsight/
-├── index.jsx                진입점 — MediaInsightPage 재export
+├── index.jsx                진입점 — MediaInsightPage / MediaInsightDetailPage 재export
 ├── MediaInsightPage.jsx     메인 페이지 — 매체 목록 + 상세 조회
+├── MediaInsightDetailPage.jsx 매체 상세 전용 페이지 (/media-insight/:mediaId)
 ├── styles.css               MediaInsight 전용 스타일
-└── components/
-    ├── MediaTable.jsx        매체 목록 테이블
-    ├── MediaDetail.jsx       매체 상세 — 업종/프로그램 분포, 혼합 조회
-    └── MediaNetwork.jsx      매체 관계 네트워크 시각화
+├── components/
+│   ├── MediaTable.jsx        매체 목록 테이블
+│   ├── MediaDetail.jsx       매체 상세 — 업종/프로그램 분포, 혼합 조회
+│   └── MediaNetwork.jsx      매체 관계 네트워크 시각화
+└── utils/
+    ├── industryIcons.js      업종 아이콘 매핑
+    └── mediaDetailCharts.js  MediaDetail 차트 옵션 빌더 모음
 ```
 
 ---
