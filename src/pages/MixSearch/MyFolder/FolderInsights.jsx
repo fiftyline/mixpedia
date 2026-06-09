@@ -8,6 +8,7 @@ import {
   budgetDistOption,
   genderOption,
   ageOption,
+  // performanceHistOption,
   industryOption,
   mediaBudgetOption,
   mediaFreqOption,
@@ -15,23 +16,44 @@ import {
 
 function reducer(state, action) {
   switch (action.type) {
-    case "start": return { data: null, loading: true, error: null };
-    case "success": return { data: action.payload, loading: false, error: null };
-    case "error": return { data: null, loading: false, error: action.payload };
-    default: return state;
+    case "start":
+      return { data: null, loading: true, error: null };
+    case "success":
+      return { data: action.payload, loading: false, error: null };
+    case "error":
+      return { data: null, loading: false, error: action.payload };
+    default:
+      return state;
   }
 }
 
 function Section({ title, badge, children, full }) {
   return (
-    <div className={`section${full ? " section--full" : ""}`}>
+    <div className={`section folder-insight-section${full ? " section--full" : ""}`}>
       <div className="section-hdr">
         <span className="section-title">{title}</span>
         {badge && <span className="section-badge">{badge}</span>}
       </div>
-      {children}
+      <div className="folder-insight-chart">{children}</div>
     </div>
   );
+}
+
+function SectionGroup({ title, children, variant = "two" }) {
+  return (
+    <div className="folder-insight-group">
+      <div className="folder-insight-group-hdr">
+        <span className="folder-insight-group-title">{title}</span>
+      </div>
+      <div className={`folder-insight-grid folder-insight-grid--${variant}`}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function chartHeight(rows, min = 180) {
+  return Math.max(min, Math.min(rows?.length ?? 0, 20) * 28 + 48);
 }
 
 export default function FolderInsights({ folderId, fileIds, folderName, onBack }) {
@@ -46,16 +68,20 @@ export default function FolderInsights({ folderId, fileIds, folderName, onBack }
     axios
       .post(`${endpoint}/analysis/insights`, { folder_id: folderId, file_ids: fileIds })
       .then((res) => dispatch({ type: "success", payload: res.data }))
-      .catch(() => dispatch({ type: "error", payload: "분석 데이터를 불러오지 못했습니다." }));
+      .catch(() =>
+        dispatch({ type: "error", payload: "분석 데이터를 불러오지 못했습니다." }),
+      );
   }, [folderId, fileIds]);
 
   const macro = data?.macro;
   const micro = data?.micro;
+  // const performance = data?.performance ?? {};
   const network = data?.network;
   const hasNetwork = Array.isArray(network?.nodes) && network.nodes.length > 0;
+  const mediaBudgetRows = micro?.media_budget_ratio_median ?? micro?.media_budget_ratio ?? [];
 
   return (
-    <div className="mix-detail">
+    <div className="mix-detail folder-insights">
       <button className="back-btn" onClick={onBack}>
         <ChevronLeft size={14} strokeWidth={2} />
         폴더 목록으로
@@ -63,8 +89,6 @@ export default function FolderInsights({ folderId, fileIds, folderName, onBack }
 
       <div className="mix-hero">
         <div className="mix-hero-name">{folderName || "폴더 분석"}</div>
-        <br />
-        <hr />
         {macro && (
           <div className="bm-insight-summary">
             <div className="bm-insight-kpi">
@@ -73,42 +97,47 @@ export default function FolderInsights({ folderId, fileIds, folderName, onBack }
             </div>
             <div className="bm-insight-kpi">
               <span className="bm-insight-kpi-label">예산 평균</span>
-              <span className="bm-insight-kpi-value">{macro.budget_distribution?.mean != null ? `${Number(macro.budget_distribution.mean).toLocaleString()}원` : "-"}</span>
+              <span className="bm-insight-kpi-value">
+                {macro.budget_distribution?.mean != null
+                  ? `${Number(macro.budget_distribution.mean).toLocaleString()}원`
+                  : "-"}
+              </span>
             </div>
             <div className="bm-insight-kpi">
               <span className="bm-insight-kpi-label">예산 중앙값</span>
-              <span className="bm-insight-kpi-value">{macro.budget_distribution?.median != null ? `${Number(macro.budget_distribution.median).toLocaleString()}원` : "-"}</span>
+              <span className="bm-insight-kpi-value">
+                {macro.budget_distribution?.median != null
+                  ? `${Number(macro.budget_distribution.median).toLocaleString()}원`
+                  : "-"}
+              </span>
             </div>
-            <div className="bm-insight-kpi-divider" />
             <div className="bm-insight-kpi">
               <span className="bm-insight-kpi-label">최소 예산</span>
-              <span className="bm-insight-kpi-value">{macro.budget_distribution?.buckets?.min != null ? `${Number(macro.budget_distribution.buckets.min).toLocaleString()}원` : "-"}</span>
+              <span className="bm-insight-kpi-value">
+                {macro.budget_distribution?.buckets?.min != null
+                  ? `${Number(macro.budget_distribution.buckets.min).toLocaleString()}원`
+                  : "-"}
+              </span>
             </div>
             <div className="bm-insight-kpi">
               <span className="bm-insight-kpi-label">최대 예산</span>
-              <span className="bm-insight-kpi-value">{macro.budget_distribution?.buckets?.max != null ? `${Number(macro.budget_distribution.buckets.max).toLocaleString()}원` : "-"}</span>
+              <span className="bm-insight-kpi-value">
+                {macro.budget_distribution?.buckets?.max != null
+                  ? `${Number(macro.budget_distribution.buckets.max).toLocaleString()}원`
+                  : "-"}
+              </span>
             </div>
           </div>
         )}
       </div>
-
-      <br />
 
       {loading && <div className="state-msg">분석 중...</div>}
       {error && <div className="state-msg state-msg--error">{error}</div>}
 
       {!loading && !error && macro && (
         <>
-          <div className="insight-grid">
-            <Section title="예산 분포" badge="Gross · Market Cost 기준">
-              <ReactECharts
-                option={budgetDistOption(macro.budget_distribution)}
-                style={{ height: 220 }}
-                opts={{ renderer: "svg" }}
-              />
-            </Section>
-
-            <Section title="업종 분포">
+          <SectionGroup title="특성" variant="four">
+            <Section title="업종">
               <ReactECharts
                 option={industryOption(macro.industry_distribution)}
                 style={{ height: 220 }}
@@ -131,42 +160,63 @@ export default function FolderInsights({ folderId, fileIds, folderName, onBack }
                 opts={{ renderer: "svg" }}
               />
             </Section>
-          </div>
 
-          <br />
+            <Section title="예산분포" badge="Gross · Market Cost 기준">
+              <ReactECharts
+                option={budgetDistOption(macro.budget_distribution)}
+                style={{ height: 220 }}
+                opts={{ renderer: "svg" }}
+              />
+            </Section>
+          </SectionGroup>
+
+          {/* my-folder 작성단가 및 효율 섹션 비활성화
+          <SectionGroup title="작성 단가 및 효율" variant="three">
+            {[
+              { key: "cpm", label: "e.CPM", unit: "원" },
+              { key: "cpc", label: "e.CPC", unit: "원" },
+              { key: "cpv", label: "e.CPV", unit: "원" },
+              { key: "ctr", label: "e.CTR", unit: "%" },
+              { key: "vtr", label: "e.VTR", unit: "%" },
+            ].map(({ key, label, unit }) => (
+              <Section key={key} title={label}>
+                <ReactECharts
+  // option={performanceHistOption(performance[key], unit)}
+                  style={{ height: 220 }}
+                  opts={{ renderer: "svg" }}
+                />
+              </Section>
+            ))}
+          </SectionGroup>
+          */}
 
           {micro && (
-            <div className="insight-grid">
-              <Section title="매체별 평균 예산 비중" badge="폴더 믹스 기준">
-                <ReactECharts
-                  option={mediaBudgetOption(micro.media_budget_ratio)}
-                  style={{ height: Math.max(180, micro.media_budget_ratio.length * 28 + 48) }}
-                  opts={{ renderer: "svg" }}
-                />
-              </Section>
-
-              <Section title="매체 출현 빈도" badge="폴더 내 포함 믹스 수">
+            <SectionGroup title="매체" variant="two">
+              <Section title="사용매체" badge="Top 20 · 믹스 개수 기준">
                 <ReactECharts
                   option={mediaFreqOption(micro.media_frequency)}
-                  style={{ height: Math.max(180, micro.media_frequency.length * 28 + 48) }}
+                  style={{ height: chartHeight(micro.media_frequency) }}
                   opts={{ renderer: "svg" }}
                 />
               </Section>
-            </div>
-          )}
 
-          <br />
+              <Section title="매체 예산 비중" badge="믹스별 비중 중앙값">
+                <ReactECharts
+                  option={mediaBudgetOption(mediaBudgetRows)}
+                  style={{ height: chartHeight(mediaBudgetRows) }}
+                  opts={{ renderer: "svg" }}
+                />
+              </Section>
 
-          {hasNetwork && (
-            <Section title="매체 관계 네트워크" badge="폴더 기준 · 줌/패닝 가능" full>
-              <MediaNetwork network={network} currentMedia={null} />
-            </Section>
+              {hasNetwork && (
+                <Section title="매체 관계 네트워크" badge="폴더 기준 · 중심 노드식 가중" full>
+                  <MediaNetwork network={network} currentMedia={null} />
+                </Section>
+              )}
+            </SectionGroup>
           )}
         </>
       )}
-
-      <br />
-      <br />
     </div>
   );
 }

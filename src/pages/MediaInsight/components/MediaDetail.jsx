@@ -142,6 +142,9 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
   const targets = Array.isArray(microData?.target_demo_cnt)
     ? microData.target_demo_cnt
     : [];
+  const ageTargets = Array.isArray(microData?.target_age_cnt)
+    ? microData.target_age_cnt
+    : [];
 
   const { genderAgg, ageAgg } = useMemo(() => {
     const gMap = { F: "여성", M: "남성", P: "전체" };
@@ -152,13 +155,17 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
       const gLabel = gMap[target_demo[0]] ?? target_demo[0];
       const ageCode = target_demo.slice(1);
       genderAgg[gLabel] = (genderAgg[gLabel] ?? 0) + (target_mix_cnt ?? 0);
-      if (ageCode) {
+      if (ageTargets.length === 0 && ageCode) {
         const aLabel = parseAge(ageCode);
         ageAgg[aLabel] = (ageAgg[aLabel] ?? 0) + (target_mix_cnt ?? 0);
       }
     });
+    ageTargets.forEach(({ age, target_mix_cnt }) => {
+      if (age == null) return;
+      ageAgg[String(age)] = target_mix_cnt ?? 0;
+    });
     return { genderAgg, ageAgg };
-  }, [targets]);
+  }, [targets, ageTargets]);
 
   const networkNodes = Array.isArray(microData?.media_network?.nodes)
     ? microData.media_network.nodes
@@ -194,8 +201,6 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
           </span>
           {media.media}
         </div>
-        <br />
-
         <div className="detail-industry-block">
           <div className="detail-industry-icons">
             <button
@@ -235,8 +240,6 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
         </div>
       </div>
 
-      <br />
-
       {isError && <div className="state-msg state-msg--error">데이터를 불러오지 못했습니다.</div>}
       {isLoading && <div className="state-msg">데이터 불러오는 중...</div>}
 
@@ -249,8 +252,6 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
               <p className="ce-section-title">단가 및 효율</p>
               <p className="ce-section-sub">미디어믹스내 GROSS, MARKET COST 기준</p>
             </div>
-            <br />
-
             {/* 단가 지표: CPM / CPC / CPV */}
             <StatSubSection
               avgCards={[
@@ -359,7 +360,7 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
               ) : (
                 <ReactECharts
                   option={buildGenderOption(genderAgg)}
-                  style={{ height: 210 }}
+                  style={{ height: 230 }}
                   opts={{ renderer: "svg" }}
                 />
               )}
@@ -378,7 +379,7 @@ export default function MediaDetail({ media, onBack, onSelectMix }) {
               ) : (
                 <ReactECharts
                   option={buildAgeOption(ageAgg)}
-                  style={{ height: 210 }}
+                  style={{ height: 230 }}
                   opts={{ renderer: "svg" }}
                 />
               )}

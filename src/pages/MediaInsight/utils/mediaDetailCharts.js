@@ -127,14 +127,14 @@ export function buildGenderOption(genderData) {
       textStyle: { fontFamily: FONT_BODY, fontSize: 12 },
     },
     legend: {
-      bottom: 0,
+      bottom: 4,
       textStyle: { color: "#9ca3bf", fontSize: 11, fontFamily: FONT_BODY },
     },
     series: [
       {
         type: "pie",
         radius: ["38%", "65%"],
-        center: ["50%", "44%"],
+        center: ["50%", "50%"],
         label: {
           show: true,
           fontSize: 11,
@@ -185,6 +185,6 @@ export function buildAgeOption(ageData) {
         itemStyle: { color: "#4fc98f", borderRadius: [3, 3, 0, 0] },
       },
     ],
-    grid: { left: 36, right: 12, top: 16, bottom: 32 },
+    grid: { left: 36, right: 12, top: 42, bottom: 42 },
   };
 }
