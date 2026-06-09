@@ -188,7 +188,7 @@ export default function MyFolderPage() {
             <div className="edit-modal-footer folder-modal-footer">
               <div className="folder-modal-actions">
                 <button
-                  className="bulk-bm-btn bulk-bm-btn--danger"
+                  className="btn-danger"
                   onClick={handleDelete}
                   disabled={deleting}
                 >
@@ -209,16 +209,18 @@ export default function MyFolderPage() {
         <div className="folder-card-grid">
           {folders.map((f) => (
             <div key={f.folder_id} className="folder-card" onClick={() => loadFolderMixes(f)}>
-              <button
-                className="folder-card-delete"
-                title="폴더 삭제"
-                onClick={(e) => { e.stopPropagation(); setDeleteTarget(f); }}
-              >
-                <Trash2 size={13} strokeWidth={2} />
-              </button>
-              <span className="folder-card-icon">
-                <Folder size={20} strokeWidth={1.8} />
-              </span>
+              <div className="folder-card-header">
+                <span className="folder-card-icon">
+                  <Folder size={20} strokeWidth={1.8} />
+                </span>
+                <button
+                  className="folder-card-delete"
+                  title="폴더 삭제"
+                  onClick={(e) => { e.stopPropagation(); setDeleteTarget(f); }}
+                >
+                  <Trash2 size={16} strokeWidth={2} />
+                </button>
+              </div>
               <span className="folder-card-name">{f.folder_name}</span>
               <span className="folder-card-meta">{(f.file_cnt ?? 0).toLocaleString()}개 미디어믹스</span>
               <span className="folder-card-meta" style={{ marginTop: 4 }}>최근 수정일 : {fmtDate(f.update_dttm)}</span>

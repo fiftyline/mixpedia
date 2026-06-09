@@ -399,6 +399,22 @@
   box-shadow: var(--shadow-sm);
 }
 
+.btn-danger {
+  height: 34px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: #ef4444;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-danger:hover:not(:disabled) { background: #dc2626; }
+.btn-danger:disabled { opacity: 0.4; cursor: not-allowed; }
+
 .btn-secondary:hover {
   border-color: var(--text-secondary);
   color: var(--text);
@@ -1148,8 +1164,14 @@
   gap: 14px;
 }
 
+.folder-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .folder-card {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1165,9 +1187,6 @@
 }
 
 .folder-card-delete {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
