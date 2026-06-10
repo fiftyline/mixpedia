@@ -26,6 +26,52 @@ function fmtBudget(v) {
   return n.toLocaleString();
 }
 
+/* my-folder 작성단가 및 효율 차트 유틸 비활성화
+function fmtHistEdge(val, unit = "") {
+  if (val == null) return "";
+  const n = Number(val);
+  if (unit === "%") return `${n.toFixed(n < 10 ? 2 : 1)}%`;
+  return `${fmtBudget(n)}${unit}`;
+}
+
+export function performanceHistOption(stat, unit = "") {
+  const counts = stat?.hist?.counts ?? [];
+  const edges = stat?.hist?.edges ?? [];
+  const labels = counts.map(
+    (_, i) => `${fmtHistEdge(edges[i], unit)}~${fmtHistEdge(edges[i + 1], unit)}`,
+  );
+
+  return {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: { type: "shadow" },
+      formatter: (p) => `<b>${p[0].name}</b><br/>${p[0].value}건`,
+    },
+    dataZoom: [{ type: "inside", xAxisIndex: 0 }],
+    xAxis: {
+      type: "category",
+      data: labels,
+      axisLabel: {
+        color: "#9ca3bf",
+        fontSize: 10,
+        rotate: 30,
+        interval: 0,
+      },
+    },
+    yAxis: { type: "value", axisLabel: { color: "#9ca3bf" } },
+    series: [
+      {
+        type: "bar",
+        data: counts,
+        barMaxWidth: 36,
+        itemStyle: { color: "#6366f1", borderRadius: [3, 3, 0, 0] },
+      },
+    ],
+    grid: { left: 36, right: 12, top: 16, bottom: 54 },
+  };
+}
+
+*/
 export function budgetDistOption({ buckets, mean }) {
   const { counts, bin_edges } = buckets;
   const keys = counts.map(
@@ -78,12 +124,12 @@ export function genderOption(gender) {
   }));
   return {
     tooltip: { trigger: "item", formatter: "<b>{b}</b>: {c}건 ({d}%)" },
-    legend: { bottom: 0, textStyle: { color: "#9ca3bf", fontSize: 11 } },
+    legend: { bottom: 4, textStyle: { color: "#9ca3bf", fontSize: 11 } },
     series: [
       {
         type: "pie",
         radius: ["40%", "68%"],
-        center: ["50%", "44%"],
+        center: ["50%", "50%"],
         label: {
           show: true,
           fontSize: 11,
@@ -118,7 +164,7 @@ export function ageOption(age_group) {
         itemStyle: { color: "#4fc98f", borderRadius: [3, 3, 0, 0] },
       },
     ],
-    grid: { left: 36, right: 12, top: 16, bottom: 32 },
+    grid: { left: 36, right: 12, top: 42, bottom: 42 },
   };
 }
 
@@ -156,13 +202,20 @@ export function industryOption(dist) {
 }
 
 export function mediaBudgetOption(rows) {
-  const sorted = [...rows].sort((a, b) => b.avg_budget_ratio - a.avg_budget_ratio);
+  const sorted = [...rows].sort(
+    (a, b) =>
+      (b.mix_count ?? 0) - (a.mix_count ?? 0) ||
+      (b.median_budget_ratio ?? b.avg_budget_ratio ?? 0) -
+        (a.median_budget_ratio ?? a.avg_budget_ratio ?? 0),
+  ).slice(0, 20);
   return {
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
-      formatter: (p) =>
-        `<b>${p[0].name}</b><br/>평균 예산 비중: ${(p[0].value * 100).toFixed(1)}%`,
+      formatter: (p) => {
+        const row = sorted[p[0].dataIndex];
+        return `<b>${p[0].name}</b><br/>예산 비중 중앙값: ${(p[0].value * 100).toFixed(1)}%<br/>포함 믹스: ${(row?.mix_count ?? 0).toLocaleString()}건`;
+      },
     },
     xAxis: {
       type: "value",
@@ -180,13 +233,13 @@ export function mediaBudgetOption(rows) {
     series: [
       {
         type: "bar",
-        data: sorted.map((r) => r.avg_budget_ratio),
+        data: sorted.map((r) => r.median_budget_ratio ?? r.avg_budget_ratio),
         barMaxWidth: 28,
         itemStyle: { color: "#4f80e1", borderRadius: [0, 3, 3, 0] },
         label: {
           show: true,
           position: "right",
-          formatter: (p) => fmtBudget(sorted[p.dataIndex]?.avg_budget),
+          formatter: (p) => `${(p.value * 100).toFixed(1)}%`,
           color: "#9ca3bf",
           fontSize: 11,
         },
@@ -197,7 +250,9 @@ export function mediaBudgetOption(rows) {
 }
 
 export function mediaFreqOption(rows) {
-  const sorted = [...rows].sort((a, b) => b.frequency - a.frequency);
+  const sorted = [...rows]
+    .sort((a, b) => b.mix_count - a.mix_count)
+    .slice(0, 20);
   return {
     tooltip: {
       trigger: "axis",
