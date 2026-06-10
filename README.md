@@ -56,7 +56,7 @@ src/
 
 ```
 Login/
-├── LoginPage.jsx   로그인 폼 — 아이디/비밀번호 입력, 토큰 저장, 메인 리디렉트
+├── LoginPage.jsx   로그인 폼 — 아이디/비밀번호 입력, 토큰 저장, /media-insight 리디렉트
 └── styles.css      로그인 페이지 전용 스타일
 ```
 
@@ -70,7 +70,7 @@ Login/
 MixSearch/
 ├── index.jsx                진입점 — MixSearchPage 재export
 ├── MixSearchPage.jsx        메인 페이지 — 필터 + 테이블 + 상세 조회 조합
-├── MixDetailPage.jsx        믹스 상세 전용 페이지 (/mix-search/detail/:file_id)
+├── MixDetailPage.jsx        믹스 상세 전용 페이지 (/mix-search/detail/:file_id) — 새 탭으로 열림
 ├── styles.css               MixSearch 전용 스타일
 │
 ├── hooks/
@@ -91,7 +91,7 @@ MixSearch/
     ├── index.jsx               내 폴더 페이지 — 폴더 목록·상세·분석 진입
     ├── CreateFolderModal.jsx   새 폴더 생성 모달 (POST /bookmark/create)
     ├── FolderNameEditor.jsx    폴더 이름 인라인 편집 (POST /bookmark/edit)
-    ├── FolderInsights.jsx      폴더 분석 페이지 — 예산·업종·매체·네트워크 차트
+    ├── FolderInsights.jsx      폴더 분석 페이지 — 업종·예산·매체·네트워크 차트 (SectionGroup 그룹핑)
     └── folderInsightCharts.js  FolderInsights 차트 옵션 빌더 모음
 ```
 
@@ -103,17 +103,17 @@ MixSearch/
 
 ```
 MediaInsight/
-├── index.jsx                진입점 — MediaInsightPage / MediaInsightDetailPage 재export
-├── MediaInsightPage.jsx     메인 페이지 — 매체 목록 + 상세 조회
+├── index.jsx                  진입점 — MediaInsightPage / MediaInsightDetailPage 재export
+├── MediaInsightPage.jsx       매체 목록 페이지 — 카드 그리드, 클릭 시 /media-insight/:mediaId 이동
 ├── MediaInsightDetailPage.jsx 매체 상세 전용 페이지 (/media-insight/:mediaId)
-├── styles.css               MediaInsight 전용 스타일
+├── styles.css                 MediaInsight 전용 스타일 — 카드, 디테일, 반응형(760px/1180px)
 ├── components/
-│   ├── MediaTable.jsx        매체 목록 테이블
-│   ├── MediaDetail.jsx       매체 상세 — 업종/프로그램 분포, 혼합 조회
-│   └── MediaNetwork.jsx      매체 관계 네트워크 시각화
+│   ├── MediaTable.jsx         매체 목록 카드 — 매체명 검색·업종 MultiSelect 필터, 무한스크롤
+│   ├── MediaDetail.jsx        매체 상세 — 업종 필터, 단가·효율·예산·타겟·Co-media 섹션
+│   └── MediaNetwork.jsx       매체 관계 네트워크 시각화
 └── utils/
-    ├── industryIcons.js      업종 아이콘 매핑
-    └── mediaDetailCharts.js  MediaDetail 차트 옵션 빌더 모음
+    ├── industryIcons.js       업종 아이콘 매핑 (MediaDetail 전용)
+    └── mediaDetailCharts.js   MediaDetail 차트 옵션 빌더 — 히스토그램, 성별 파이, 연령 바
 ```
 
 ---
